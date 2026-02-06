@@ -1,0 +1,322 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PG Daily Log</title>
+<style>
+  body { font-family: -apple-system, system-ui, Arial; background:#0f0f0f; color:#fff; margin:0; }
+  header { position:sticky; top:0; background:#141414; padding:14px 16px; border-bottom:1px solid #222; }
+  header .t { font-weight:700; }
+  main { padding:16px; max-width:900px; margin:0 auto; }
+  .card { background:#141414; border:1px solid #222; border-radius:14px; padding:14px; margin-bottom:12px; }
+  label { display:block; margin-top:10px; font-size:13px; color:#bbb; }
+  input, select { width:100%; padding:10px; margin-top:6px; border-radius:10px; border:1px solid #2a2a2a; background:#0f0f0f; color:#fff; }
+  .row { display:flex; gap:10px; flex-wrap:wrap; }
+  .col { flex:1; min-width:220px; }
+  .btns { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+  button { padding:12px 14px; border-radius:12px; border:1px solid #2a2a2a; background:#0f0f0f; color:#fff; cursor:pointer; }
+  button.primary { background:#25D366; border-color:#25D366; color:#000; font-weight:700; }
+  button.shift { background:#1b1b1b; }
+  button.shift.active { border-color:#25D366; box-shadow: 0 0 0 1px #25D366 inset; }
+  .sectionTitle { margin-top:6px; font-weight:700; }
+  .hint { font-size:12px; color:#9aa; margin-top:8px; line-height:1.4; }
+  .item { display:flex; gap:10px; align-items:flex-start; padding:10px; border:1px solid #222; border-radius:12px; margin-top:10px; background:#101010; }
+  .item input[type="checkbox"] { margin-top:2px; transform:scale(1.2); }
+  .meta { font-size:12px; color:#9aa; margin-top:4px; }
+  .small { font-size:12px; color:#aaa; margin-top:8px; }
+  .divider { height:1px; background:#222; margin:14px 0; }
+</style>
+</head>
+
+<body>
+<header>
+  <div class="t">PG Daily Log</div>
+</header>
+
+<main>
+
+  <!-- Session -->
+  <div class="card" id="sessionCard">
+    <div class="row">
+      <div class="col">
+        <label>Store</label>
+        <select id="store">
+          <option value="Store A">Store A</option>
+          <option value="Store B">Store B</option>
+        </select>
+      </div>
+      <div class="col">
+        <label>Date</label>
+        <input id="date" type="date">
+      </div>
+      <div class="col">
+        <label>Employee Name (required)</label>
+        <input id="empName" placeholder="e.g., Beth / Ruben" autocomplete="off">
+      </div>
+    </div>
+
+    <label>Shift</label>
+    <div class="btns">
+      <button class="shift" data-shift="opening">Opening</button>
+      <button class="shift" data-shift="mid">12–5pm</button>
+      <button class="shift" data-shift="closing">Closing</button>
+    </div>
+
+    <div class="hint">
+      Tap <b>Submit & Send</b> at the end of the shift. WhatsApp will open with the message pre-filled to Olivia (+1 212 289 4416).
+    </div>
+  </div>
+
+  <!-- Shift form -->
+  <div class="card" id="shiftCard" style="display:none;">
+    <div class="sectionTitle" id="shiftTitle">Shift</div>
+    <div class="small" id="shiftCtx"></div>
+
+    <div class="divider"></div>
+
+    <!-- Focus Product -->
+    <div class="sectionTitle">Focus Product (record only)</div>
+    <div class="row">
+      <div class="col">
+        <label>Focus SKU (1)</label>
+        <input id="focusSku" placeholder="SKU / name">
+      </div>
+      <div class="col">
+        <label>Recommend Times</label>
+        <input id="focusRecommend" type="number" inputmode="numeric" placeholder="0">
+      </div>
+      <div class="col">
+        <label>Closed?</label>
+        <select id="focusClosed">
+          <option value="">(blank)</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Delivery expiry check -->
+    <div class="sectionTitle">Today's delivery expiry check (if &lt; 8 months)</div>
+    <div class="small">Food / Topper / Treats / Supplements — list SKUs below:</div>
+    <div class="row">
+      <div class="col"><label>SKU 1</label><input class="expSku"></div>
+      <div class="col"><label>SKU 2</label><input class="expSku"></div>
+    </div>
+    <div class="row">
+      <div class="col"><label>SKU 3</label><input class="expSku"></div>
+      <div class="col"><label>SKU 4</label><input class="expSku"></div>
+    </div>
+    <div class="row">
+      <div class="col"><label>SKU 5</label><input class="expSku"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Checklist -->
+    <div class="sectionTitle">Checklist</div>
+    <div id="checklist"></div>
+
+    <!-- Closing only -->
+    <div id="closingCash" style="display:none;">
+      <div class="divider"></div>
+      <div class="sectionTitle">Cash</div>
+      <label>Drawer Cash ($) — record only</label>
+      <input id="drawerCash" type="number" inputmode="decimal" placeholder="e.g., 300">
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="btns">
+      <button onclick="back()" class="shift">Back</button>
+      <button onclick="submitAndSend()" class="primary">Submit & Send (WhatsApp)</button>
+    </div>
+
+    <div class="small" id="submitMeta"></div>
+  </div>
+
+</main>
+
+<script>
+  const WHATSAPP_PHONE = "12122894416";
+
+  const CHECKLISTS = {
+    opening: [
+      "Environment On (Music / Lights / AC / Heat)",
+      "System Check (Phone / Wifi / POS working)",
+      "Cleaning Check (Window / Floor / Restroom)",
+      "Bin & Shelf Ready",
+      "Freezers Normal"
+    ],
+    mid: [
+      "Shelf Organized",
+      "Bin Organized",
+      "Floor Clean"
+    ],
+    closing: [
+      "Environment Off (Music / Lights / AC / Heat)",
+      "Freezers Normal",
+      "Trash Out",
+      "Supplies Check (Receipt Paper ≥3 Roll / Printer Cartridge ≥15%)"
+    ]
+  };
+
+  let state = { shift:null, checklist:[] };
+
+  const $ = (id) => document.getElementById(id);
+
+  // init date = today
+  (function initDate(){
+    $("date").value = new Date().toISOString().slice(0,10);
+  })();
+
+  document.querySelectorAll("button.shift[data-shift]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll("button.shift[data-shift]").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      openShift(btn.dataset.shift);
+    });
+  });
+
+  function openShift(shift) {
+    const name = $("empName").value.trim();
+    if (!name) { alert("Employee Name required."); return; }
+
+    state.shift = shift;
+    state.checklist = CHECKLISTS[shift].map(label => ({ label, checked:false, checkedAt:null }));
+
+    $("sessionCard").style.display = "none";
+    $("shiftCard").style.display = "block";
+
+    const store = $("store").value;
+    const date = $("date").value;
+
+    $("shiftTitle").textContent = shift === "opening" ? "Opening" : (shift === "mid" ? "12–5pm" : "Closing");
+    $("shiftCtx").textContent = `Store: ${store}  •  Date: ${date}  •  Name: ${name}`;
+
+    // Show closing cash only for closing shift
+    $("closingCash").style.display = (shift === "closing") ? "block" : "none";
+    if (shift !== "closing") $("drawerCash").value = "";
+
+    // clear focus/delivery for this shift submission
+    $("focusSku").value = "";
+    $("focusRecommend").value = "";
+    $("focusClosed").value = "";
+    document.querySelectorAll(".expSku").forEach(i => i.value = "");
+
+    renderChecklist();
+    $("submitMeta").textContent = "";
+  }
+
+  function renderChecklist() {
+    const wrap = $("checklist");
+    wrap.innerHTML = "";
+
+    state.checklist.forEach((it, idx) => {
+      const id = `cb_${idx}`;
+      const metaId = `meta_${idx}`;
+      wrap.insertAdjacentHTML("beforeend", `
+        <div class="item">
+          <input type="checkbox" id="${id}">
+          <div style="flex:1">
+            <div>${escapeHtml(it.label)}</div>
+            <div class="meta" id="${metaId}">Not checked yet</div>
+          </div>
+        </div>
+      `);
+
+      const cb = $(id);
+      cb.addEventListener("change", () => {
+        it.checked = cb.checked;
+        it.checkedAt = cb.checked ? new Date().toISOString() : null;
+        $(metaId).textContent = it.checkedAt ? ("Checked at " + formatTime(it.checkedAt)) : "Not checked yet";
+      });
+    });
+  }
+
+  function submitAndSend() {
+    const store = $("store").value;
+    const date = $("date").value;
+    const name = $("empName").value.trim();
+    const shift = state.shift;
+
+    if (!name || !shift) { alert("Missing name or shift."); return; }
+
+    const now = new Date();
+    const submittedAt = now.toISOString();
+    const submittedTime = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
+    const focusSku = $("focusSku").value.trim();
+    const focusRecommend = $("focusRecommend").value.trim();
+    const focusClosed = $("focusClosed").value;
+
+    const expSkus = Array.from(document.querySelectorAll(".expSku"))
+      .map(i => i.value.trim())
+      .filter(Boolean);
+
+    const drawerCash = (shift === "closing") ? $("drawerCash").value.trim() : "";
+
+    // Build WhatsApp message (sheet-like)
+    let msg = `PGLOG | ${store} | ${shiftLabel(shift)} | ${name} | ${date} | ${submittedTime}\n\n`;
+
+    msg += `Focus Product (record only)\n`;
+    msg += `- SKU: ${focusSku || "(blank)"}\n`;
+    msg += `- Recommend times: ${focusRecommend || "(blank)"}\n`;
+    msg += `- Closed: ${focusClosed || "(blank)"}\n\n`;
+
+    msg += `Delivery expiry check (<8 months)\n`;
+    if (expSkus.length === 0) msg += `- (blank)\n\n`;
+    else {
+      expSkus.forEach((s, i) => msg += `- SKU ${i+1}: ${s}\n`);
+      msg += `\n`;
+    }
+
+    msg += `Checklist\n`;
+    state.checklist.forEach(it => {
+      const mark = it.checked ? "✓" : " ";
+      msg += `[${mark}] ${it.label}\n`;
+    });
+
+    if (shift === "closing") {
+      msg += `\nCash\n`;
+      msg += `- Drawer Cash: $${drawerCash || "(blank)"}\n`;
+    }
+
+    msg += `\nSubmitted: ${submittedAt}\n`;
+
+    // Open WhatsApp with prefilled message to your number
+    const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(msg)}`;
+    $("submitMeta").textContent = "Opening WhatsApp…";
+    location.href = url;
+  }
+
+  function back() {
+    $("shiftCard").style.display = "none";
+    $("sessionCard").style.display = "block";
+    state = { shift:null, checklist:[] };
+    document.querySelectorAll("button.shift[data-shift]").forEach(b=>b.classList.remove("active"));
+  }
+
+  function shiftLabel(s){
+    if (s === "opening") return "Opening";
+    if (s === "mid") return "12–5pm";
+    return "Closing";
+  }
+
+  function formatTime(iso){
+    try {
+      const d = new Date(iso);
+      return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    } catch { return iso; }
+  }
+
+  function escapeHtml(str){
+    return (str || "").replace(/[&<>"']/g, m => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[m]));
+  }
+</script>
+
+</body>
+</html>
