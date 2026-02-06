@@ -8,62 +8,105 @@
   header { position:sticky; top:0; background:#141414; padding:14px 16px; border-bottom:1px solid #222; }
   header .t { font-weight:700; }
   main { padding:16px; max-width:900px; margin:0 auto; }
+
   .card { background:#141414; border:1px solid #222; border-radius:14px; padding:14px; margin-bottom:12px; }
   label { display:block; margin-top:10px; font-size:13px; color:#bbb; }
-  input, select { width:100%; padding:10px; margin-top:6px; border-radius:10px; border:1px solid #2a2a2a; background:#0f0f0f; color:#fff; }
+
+  /* IMPORTANT: do NOT apply width:100% to checkbox inputs */
+  input:not([type="checkbox"]), select {
+    width:100%;
+    padding:10px;
+    margin-top:6px;
+    border-radius:10px;
+    border:1px solid #2a2a2a;
+    background:#0f0f0f;
+    color:#fff;
+    box-sizing:border-box;
+  }
+
   .row { display:flex; gap:10px; flex-wrap:wrap; }
   .col { flex:1; min-width:220px; }
   .btns { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+
   button { padding:12px 14px; border-radius:12px; border:1px solid #2a2a2a; background:#0f0f0f; color:#fff; cursor:pointer; }
   button.primary { background:#25D366; border-color:#25D366; color:#000; font-weight:700; }
   button.shift { background:#1b1b1b; }
-  button.shift.active { border-color:#25D366; box-shadow: 0 0 0 1px #25D366 inset; }
+  button.shift.active { border-color:#25D366; box-shadow:0 0 0 1px #25D366 inset; }
+  button:disabled { cursor:not-allowed; }
+
   .sectionTitle { margin-top:6px; font-weight:700; }
   .hint { font-size:12px; color:#9aa; margin-top:8px; line-height:1.4; }
-  .item { display:flex; gap:10px; align-items:flex-start; padding:10px; border:1px solid #222; border-radius:12px; margin-top:10px; background:#101010; }
-  .item input[type="checkbox"] { margin-top:2px; transform:scale(1.2); }
-  .meta { font-size:12px; color:#9aa; margin-top:4px; }
   .small { font-size:12px; color:#aaa; margin-top:8px; }
   .divider { height:1px; background:#222; margin:14px 0; }
+
+  .skuBlock { padding:10px; border:1px solid #222; border-radius:12px; background:#101010; margin-top:10px; }
+  .skuHr { height:1px; background:#222; margin:12px 0; }
+
+  .item {
+    display:flex; gap:10px; align-items:flex-start;
+    padding:10px; border:1px solid #222; border-radius:12px;
+    margin-top:10px; background:#101010;
+  }
+  .item input[type="checkbox"] { width:auto; margin-top:2px; transform:scale(1.2); flex:0 0 auto; }
+  .meta { font-size:12px; color:#9aa; margin-top:4px; }
+
+  .subBox {
+    margin-top:8px;
+    padding:10px;
+    border:1px dashed #2a2a2a;
+    border-radius:12px;
+    background:#0f0f0f;
+  }
+  .subTitle { font-size:12px; color:#bbb; margin-bottom:6px; font-weight:600; }
+  .subItem { display:flex; gap:10px; align-items:center; margin-top:8px; }
+  .subItem input[type="checkbox"] { transform:scale(1.15); }
+  .subItem span { font-size:13px; color:#e6e6e6; }
 </style>
 </head>
 
 <body>
-<header>
-  <div class="t">PG Daily Log</div>
-</header>
+<header><div class="t">PG Daily Log</div></header>
 
 <main>
-
   <!-- Session -->
   <div class="card" id="sessionCard">
     <div class="row">
       <div class="col">
         <label>Store</label>
         <select id="store">
-          <option value="Store A">Store A</option>
-          <option value="Store B">Store B</option>
+          <option value="490 Bergen St">490 Bergen St</option>
+          <option value="1562 1st Ave">1562 1st Ave</option>
         </select>
       </div>
+
       <div class="col">
         <label>Date</label>
         <input id="date" type="date">
       </div>
+
       <div class="col">
-        <label>Employee Name (required)</label>
-        <input id="empName" placeholder="e.g., Beth / Ruben" autocomplete="off">
+        <label>Name</label>
+        <div class="row" style="gap:8px; align-items:flex-end;">
+          <div class="col" style="min-width:0;">
+            <input id="empName" autocomplete="off">
+          </div>
+          <div style="min-width:120px;">
+            <button type="button" class="shift" onclick="clearSavedName()">Clear</button>
+          </div>
+        </div>
+        <div class="small">Name is saved on this phone automatically.</div>
       </div>
     </div>
 
     <label>Shift</label>
     <div class="btns">
-      <button class="shift" data-shift="opening">Opening</button>
-      <button class="shift" data-shift="mid">12–5pm</button>
-      <button class="shift" data-shift="closing">Closing</button>
+      <button class="shift" data-shift="opening">Opening (08:40–11:00)</button>
+      <button class="shift" data-shift="mid">12–5pm (12:00–17:00)</button>
+      <button class="shift" data-shift="closing">Closing (19:40–21:20)</button>
     </div>
 
     <div class="hint">
-      Tap <b>Submit & Send</b> at the end of the shift. WhatsApp will open with the message pre-filled to Olivia (+1 212 289 4416).
+      Tap <b>Submit & Send</b> at the end of the shift. WhatsApp will open with the message pre-filled to Olivia.
     </div>
   </div>
 
@@ -74,24 +117,56 @@
 
     <div class="divider"></div>
 
-    <!-- Focus Product -->
-    <div class="sectionTitle">Focus Product (record only)</div>
-    <div class="row">
-      <div class="col">
-        <label>Focus SKU (1)</label>
-        <input id="focusSku" placeholder="SKU / name">
+    <!-- Focus SKUs -->
+    <div class="sectionTitle">Focus SKUs (record only)</div>
+    <div class="skuBlock">
+      <div class="sectionTitle">SKU 1</div>
+      <div class="row">
+        <div class="col">
+          <label>Recommend Times</label>
+          <input type="number" class="focusRec" value="0" min="0" inputmode="numeric">
+        </div>
+        <div class="col">
+          <label>Closed?</label>
+          <select class="focusClosed">
+            <option value="No" selected>No</option>
+            <option value="Yes">Yes</option>
+          </select>
+        </div>
       </div>
-      <div class="col">
-        <label>Recommend Times</label>
-        <input id="focusRecommend" type="number" inputmode="numeric" placeholder="0">
+
+      <div class="skuHr"></div>
+
+      <div class="sectionTitle">SKU 2</div>
+      <div class="row">
+        <div class="col">
+          <label>Recommend Times</label>
+          <input type="number" class="focusRec" value="0" min="0" inputmode="numeric">
+        </div>
+        <div class="col">
+          <label>Closed?</label>
+          <select class="focusClosed">
+            <option value="No" selected>No</option>
+            <option value="Yes">Yes</option>
+          </select>
+        </div>
       </div>
-      <div class="col">
-        <label>Closed?</label>
-        <select id="focusClosed">
-          <option value="">(blank)</option>
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
-        </select>
+
+      <div class="skuHr"></div>
+
+      <div class="sectionTitle">SKU 3</div>
+      <div class="row">
+        <div class="col">
+          <label>Recommend Times</label>
+          <input type="number" class="focusRec" value="0" min="0" inputmode="numeric">
+        </div>
+        <div class="col">
+          <label>Closed?</label>
+          <select class="focusClosed">
+            <option value="No" selected>No</option>
+            <option value="Yes">Yes</option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -118,73 +193,237 @@
     <div class="sectionTitle">Checklist</div>
     <div id="checklist"></div>
 
-    <!-- Closing only -->
+    <!-- Closing only cash -->
     <div id="closingCash" style="display:none;">
       <div class="divider"></div>
       <div class="sectionTitle">Cash</div>
-      <label>Drawer Cash ($) — record only</label>
-      <input id="drawerCash" type="number" inputmode="decimal" placeholder="e.g., 300">
+      <label>Drawer Cash ($)</label>
+      <input id="drawerCash" type="number" inputmode="decimal">
     </div>
 
     <div class="divider"></div>
 
     <div class="btns">
       <button onclick="back()" class="shift">Back</button>
-      <button onclick="submitAndSend()" class="primary">Submit & Send (WhatsApp)</button>
+      <button onclick="submitAndSend()" class="primary" id="submitBtn">Submit & Send (WhatsApp)</button>
     </div>
 
     <div class="small" id="submitMeta"></div>
   </div>
-
 </main>
 
 <script>
+  // WhatsApp recipient
   const WHATSAPP_PHONE = "12122894416";
+  const $ = (id) => document.getElementById(id);
 
+  // Local-only storage (per employee phone)
+  const LS_NAME_KEY = "pgdl_name_v1";
+  const LS_STORE_KEY = "pgdl_store_v1";
+
+  function loadSavedBasics() {
+    try {
+      const savedName = localStorage.getItem(LS_NAME_KEY) || "";
+      const savedStore = localStorage.getItem(LS_STORE_KEY) || "";
+      if (savedName) $("empName").value = savedName;
+      if (savedStore) $("store").value = savedStore;
+    } catch (e) {}
+  }
+  function saveBasics() {
+    try {
+      const name = $("empName").value.trim();
+      const store = $("store").value;
+      if (name) localStorage.setItem(LS_NAME_KEY, name);
+      if (store) localStorage.setItem(LS_STORE_KEY, store);
+    } catch (e) {}
+  }
+  function clearSavedName() {
+    try { localStorage.removeItem(LS_NAME_KEY); } catch (e) {}
+    $("empName").value = "";
+    $("empName").focus();
+  }
+
+  // Time windows (device local time; expected America/New_York)
+  const SHIFT_WINDOWS = {
+    opening: { start: "08:40", end: "11:00" },
+    mid:     { start: "12:00", end: "17:00" },
+    closing: { start: "19:40", end: "21:20" }
+  };
+
+  function minutesSinceMidnight(d = new Date()) {
+    return d.getHours() * 60 + d.getMinutes();
+  }
+  function parseHHMM(hhmm) {
+    const [h, m] = hhmm.split(":").map(Number);
+    return h * 60 + m;
+  }
+  function isWithinWindow(shiftKey, d = new Date()) {
+    const w = SHIFT_WINDOWS[shiftKey];
+    if (!w) return true;
+    const now = minutesSinceMidnight(d);
+    const start = parseHHMM(w.start);
+    const end = parseHHMM(w.end);
+    return now >= start && now <= end;
+  }
+  function windowText(shiftKey) {
+    const w = SHIFT_WINDOWS[shiftKey];
+    if (!w) return "";
+    return `${w.start}–${w.end}`;
+  }
+  function setShiftButtonsEnabled() {
+    document.querySelectorAll('button.shift[data-shift]').forEach(btn => {
+      const key = btn.dataset.shift;
+      const ok = isWithinWindow(key);
+      btn.disabled = !ok;
+      btn.style.opacity = ok ? "1" : "0.35";
+    });
+  }
+
+  // Checklist definitions: main checkbox + sub-issues + optional note
   const CHECKLISTS = {
     opening: [
-      "Environment On (Music / Lights / AC / Heat)",
-      "System Check (Phone / Wifi / POS working)",
-      "Cleaning Check (Window / Floor / Restroom)",
-      "Bin & Shelf Ready",
-      "Freezers Normal"
+      {
+        key: "environment",
+        label: "Environment Normal",
+        sub: ["Music issue", "Lights issue", "AC/Heat issue", "Other"],
+        noteKey: "label_missing",
+        noteLabel: "Label missing",
+        notePlaceholder: "eg, FD duck head, poop bag, etc"
+      },
+      {
+        key: "system",
+        label: "System Normal (Phone / Wifi / POS)",
+        sub: ["Phone issue", "Wifi issue", "POS issue", "Printer issue", "Other"]
+      },
+      {
+        key: "cleaning",
+        label: "Cleaning Normal (Window / Floor / Restroom)",
+        sub: ["Window not clean", "Floor not clean", "Restroom not clean", "Trash needs attention", "Other"]
+      },
+      {
+        key: "bins",
+        label: "Bin & Shelf Ready",
+        sub: ["Shelf messy", "Bin messy", "Restock needed", "Signage missing", "Other"]
+      },
+      {
+        key: "freezers",
+        label: "Freezers Normal",
+        sub: ["Temp issue", "Power issue", "Ice build-up", "Door not sealed", "Other"]
+      }
     ],
     mid: [
-      "Shelf Organized",
-      "Bin Organized",
-      "Floor Clean"
+      {
+        key: "environment",
+        label: "Environment Normal",
+        sub: ["Music issue", "Lights issue", "AC/Heat issue", "Other"],
+        noteKey: "label_missing",
+        noteLabel: "Label missing",
+        notePlaceholder: "eg, FD duck head, poop bag, etc"
+      },
+      {
+        key: "system",
+        label: "System Normal (Phone / Wifi / POS)",
+        sub: ["Phone issue", "Wifi issue", "POS issue", "Printer issue", "Other"]
+      },
+      {
+        key: "cleaning",
+        label: "Cleaning Normal (Window / Floor / Restroom)",
+        sub: ["Window not clean", "Floor not clean", "Restroom not clean", "Trash needs attention", "Other"]
+      },
+      {
+        key: "freezers",
+        label: "Freezers Normal",
+        sub: ["Temp issue", "Power issue", "Ice build-up", "Door not sealed", "Other"]
+      }
     ],
     closing: [
-      "Environment Off (Music / Lights / AC / Heat)",
-      "Freezers Normal",
-      "Trash Out",
-      "Supplies Check (Receipt Paper ≥3 Roll / Printer Cartridge ≥15%)"
+      {
+        key: "environment",
+        label: "Environment Off (Music / Lights / AC / Heat)",
+        sub: ["Music still on", "Lights still on", "AC/Heat issue", "Other"]
+      },
+      {
+        key: "system",
+        label: "System Normal (Phone / Wifi / POS)",
+        sub: ["Phone issue", "Wifi issue", "POS issue", "Printer issue", "Other"]
+      },
+      {
+        key: "cleaning",
+        label: "Cleaning Normal (Window / Floor / Restroom)",
+        sub: ["Window not clean", "Floor not clean", "Restroom not clean", "Trash needs attention", "Other"]
+      },
+      {
+        key: "freezers",
+        label: "Freezers Normal",
+        sub: ["Temp issue", "Power issue", "Ice build-up", "Door not sealed", "Other"]
+      },
+      {
+        key: "trash",
+        label: "Trash Out",
+        sub: ["Trash not taken out", "Bins overflowing", "Other"]
+      },
+      {
+        key: "supplies",
+        label: "Supplies Check",
+        sub: [
+          "Receipt paper ≤ 3 rolls",
+          "Printer cartridge ≤ 15%",
+          "Price label ≤ 1 roll",
+          "Fabuloso need it next week"
+        ]
+      }
     ]
   };
 
-  let state = { shift:null, checklist:[] };
+  // State
+  let state = { shift:null, items:[] };
+  // item: { key, label, checked, checkedAt, sub:[{label, checked}], noteKey?, noteLabel?, notePlaceholder?, note }
 
-  const $ = (id) => document.getElementById(id);
-
-  // init date = today
-  (function initDate(){
+  (function init() {
     $("date").value = new Date().toISOString().slice(0,10);
+    loadSavedBasics();
+    setShiftButtonsEnabled();
+    setInterval(setShiftButtonsEnabled, 30 * 1000);
   })();
 
   document.querySelectorAll("button.shift[data-shift]").forEach(btn=>{
     btn.addEventListener("click", ()=>{
+      // time gate: don't enter shift outside window
+      const key = btn.dataset.shift;
+      if (!isWithinWindow(key)) {
+        alert(`This shift can only be submitted during ${windowText(key)}.`);
+        return;
+      }
+
       document.querySelectorAll("button.shift[data-shift]").forEach(b=>b.classList.remove("active"));
       btn.classList.add("active");
-      openShift(btn.dataset.shift);
+      openShift(key);
     });
   });
 
   function openShift(shift) {
+    // time gate again
+    if (!isWithinWindow(shift)) {
+      alert(`This shift can only be submitted during ${windowText(shift)}.`);
+      return;
+    }
+
     const name = $("empName").value.trim();
-    if (!name) { alert("Employee Name required."); return; }
+    if (!name) { alert("Name required."); return; }
+    saveBasics();
 
     state.shift = shift;
-    state.checklist = CHECKLISTS[shift].map(label => ({ label, checked:false, checkedAt:null }));
+    state.items = (CHECKLISTS[shift] || []).map(it => ({
+      key: it.key,
+      label: it.label,
+      checked: false,
+      checkedAt: null,
+      sub: (it.sub || []).map(s => ({ label: s, checked: false })),
+      noteKey: it.noteKey || null,
+      noteLabel: it.noteLabel || null,
+      notePlaceholder: it.notePlaceholder || "",
+      note: ""
+    }));
 
     $("sessionCard").style.display = "none";
     $("shiftCard").style.display = "block";
@@ -195,97 +434,152 @@
     $("shiftTitle").textContent = shift === "opening" ? "Opening" : (shift === "mid" ? "12–5pm" : "Closing");
     $("shiftCtx").textContent = `Store: ${store}  •  Date: ${date}  •  Name: ${name}`;
 
-    // Show closing cash only for closing shift
+    // Closing cash only
     $("closingCash").style.display = (shift === "closing") ? "block" : "none";
     if (shift !== "closing") $("drawerCash").value = "";
 
-    // clear focus/delivery for this shift submission
-    $("focusSku").value = "";
-    $("focusRecommend").value = "";
-    $("focusClosed").value = "";
+    // reset per shift
+    document.querySelectorAll(".focusRec").forEach(i => i.value = "0");
+    document.querySelectorAll(".focusClosed").forEach(i => i.value = "No");
     document.querySelectorAll(".expSku").forEach(i => i.value = "");
 
     renderChecklist();
     $("submitMeta").textContent = "";
+    updateSubmitButtonState();
+  }
+
+  function updateSubmitButtonState() {
+    const btn = $("submitBtn");
+    if (!state.shift) return;
+    const ok = isWithinWindow(state.shift);
+    btn.disabled = !ok;
+    btn.style.opacity = ok ? "1" : "0.35";
+    if (!ok) {
+      $("submitMeta").textContent = `Outside allowed time window (${windowText(state.shift)}).`;
+    }
   }
 
   function renderChecklist() {
     const wrap = $("checklist");
     wrap.innerHTML = "";
 
-    state.checklist.forEach((it, idx) => {
-      const id = `cb_${idx}`;
+    state.items.forEach((it, idx) => {
+      const mainId = `m_${idx}`;
       const metaId = `meta_${idx}`;
+      const subWrapId = `sub_${idx}`;
+      const noteId = `note_${idx}`;
+
       wrap.insertAdjacentHTML("beforeend", `
         <div class="item">
-          <input type="checkbox" id="${id}">
+          <input type="checkbox" id="${mainId}">
           <div style="flex:1">
             <div>${escapeHtml(it.label)}</div>
-            <div class="meta" id="${metaId}">Not checked yet</div>
+            <div class="meta" id="${metaId}">未完成</div>
+            <div class="subBox" id="${subWrapId}">
+              <div class="subTitle">Details (check if issue)</div>
+            </div>
           </div>
         </div>
       `);
 
-      const cb = $(id);
-      cb.addEventListener("change", () => {
-        it.checked = cb.checked;
-        it.checkedAt = cb.checked ? new Date().toISOString() : null;
-        $(metaId).textContent = it.checkedAt ? ("Checked at " + formatTime(it.checkedAt)) : "Not checked yet";
+      const subWrap = document.getElementById(subWrapId);
+
+      // sub issues
+      it.sub.forEach((s, sidx) => {
+        const sid = `s_${idx}_${sidx}`;
+        subWrap.insertAdjacentHTML("beforeend", `
+          <div class="subItem">
+            <input type="checkbox" id="${sid}">
+            <span>${escapeHtml(s.label)}</span>
+          </div>
+        `);
+        document.getElementById(sid).addEventListener("change", (e) => {
+          s.checked = e.target.checked;
+        });
+      });
+
+      // note (Label missing)
+      if (it.noteKey) {
+        subWrap.insertAdjacentHTML("beforeend", `
+          <div style="margin-top:10px;">
+            <div class="subTitle">${escapeHtml(it.noteLabel)}</div>
+            <input id="${noteId}" placeholder="${escapeAttr(it.notePlaceholder)}">
+          </div>
+        `);
+        document.getElementById(noteId).addEventListener("input", (e) => {
+          it.note = e.target.value; // empty if user leaves blank
+        });
+      }
+
+      // main checkbox timestamp
+      const mainCb = document.getElementById(mainId);
+      mainCb.addEventListener("change", () => {
+        it.checked = mainCb.checked;
+        it.checkedAt = it.checked ? new Date().toISOString() : null;
+        document.getElementById(metaId).textContent = it.checkedAt ? ("已完成 " + formatTime(it.checkedAt)) : "未完成";
       });
     });
   }
 
   function submitAndSend() {
+    // final time gate at submission time
+    if (!state.shift || !isWithinWindow(state.shift)) {
+      alert(`You can only submit during ${windowText(state.shift)}.`);
+      updateSubmitButtonState();
+      return;
+    }
+
     const store = $("store").value;
     const date = $("date").value;
     const name = $("empName").value.trim();
     const shift = state.shift;
-
     if (!name || !shift) { alert("Missing name or shift."); return; }
 
     const now = new Date();
-    const submittedAt = now.toISOString();
+    const submittedAtISO = now.toISOString();
     const submittedTime = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
 
-    const focusSku = $("focusSku").value.trim();
-    const focusRecommend = $("focusRecommend").value.trim();
-    const focusClosed = $("focusClosed").value;
-
-    const expSkus = Array.from(document.querySelectorAll(".expSku"))
-      .map(i => i.value.trim())
-      .filter(Boolean);
-
+    const focusRecs = Array.from(document.querySelectorAll(".focusRec")).map(i => i.value.trim());
+    const focusClosed = Array.from(document.querySelectorAll(".focusClosed")).map(i => i.value || "No");
+    const expSkus = Array.from(document.querySelectorAll(".expSku")).map(i => i.value.trim()).filter(Boolean);
     const drawerCash = (shift === "closing") ? $("drawerCash").value.trim() : "";
 
-    // Build WhatsApp message (sheet-like)
     let msg = `PGLOG | ${store} | ${shiftLabel(shift)} | ${name} | ${date} | ${submittedTime}\n\n`;
 
-    msg += `Focus Product (record only)\n`;
-    msg += `- SKU: ${focusSku || "(blank)"}\n`;
-    msg += `- Recommend times: ${focusRecommend || "(blank)"}\n`;
-    msg += `- Closed: ${focusClosed || "(blank)"}\n\n`;
+    msg += `Focus SKUs\n`;
+    for (let i=0; i<3; i++) {
+      const rec = (focusRecs[i] ?? "0").toString();
+      const closed = focusClosed[i] || "No";
+      msg += `- SKU ${i+1} | Recommend: ${rec} | Closed: ${closed}\n`;
+    }
+    msg += `\n`;
 
     msg += `Delivery expiry check (<8 months)\n`;
-    if (expSkus.length === 0) msg += `- (blank)\n\n`;
-    else {
-      expSkus.forEach((s, i) => msg += `- SKU ${i+1}: ${s}\n`);
-      msg += `\n`;
-    }
+    expSkus.forEach((s, i) => { msg += `- SKU ${i+1}: ${s}\n`; });
+    msg += `\n`;
 
     msg += `Checklist\n`;
-    state.checklist.forEach(it => {
+    state.items.forEach(it => {
       const mark = it.checked ? "✓" : " ";
       msg += `[${mark}] ${it.label}\n`;
+
+      // sub issues (only if checked)
+      const issues = (it.sub || []).filter(s => s.checked).map(s => s.label);
+      issues.forEach(s => { msg += `  - ${s}\n`; });
+
+      // ALWAYS include Label missing line where applicable (even empty)
+      if (it.noteKey === "label_missing") {
+        msg += `  Label missing: ${ (it.note || "").trim() }\n`;
+      }
     });
 
     if (shift === "closing") {
       msg += `\nCash\n`;
-      msg += `- Drawer Cash: $${drawerCash || "(blank)"}\n`;
+      msg += `- Drawer Cash: $${drawerCash}\n`;
     }
 
-    msg += `\nSubmitted: ${submittedAt}\n`;
+    msg += `\nSubmitted: ${submittedAtISO}\n`;
 
-    // Open WhatsApp with prefilled message to your number
     const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(msg)}`;
     $("submitMeta").textContent = "Opening WhatsApp…";
     location.href = url;
@@ -294,8 +588,9 @@
   function back() {
     $("shiftCard").style.display = "none";
     $("sessionCard").style.display = "block";
-    state = { shift:null, checklist:[] };
+    state = { shift:null, items:[] };
     document.querySelectorAll("button.shift[data-shift]").forEach(b=>b.classList.remove("active"));
+    setShiftButtonsEnabled();
   }
 
   function shiftLabel(s){
@@ -315,6 +610,9 @@
     return (str || "").replace(/[&<>"']/g, m => ({
       "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
     }[m]));
+  }
+  function escapeAttr(str){
+    return (str || "").replace(/"/g, "&quot;");
   }
 </script>
 
