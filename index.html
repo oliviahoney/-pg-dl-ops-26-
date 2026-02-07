@@ -31,68 +31,67 @@
     }
 
     .expWrap{ margin-top:14px; }
-.expToggle{ display:flex; align-items:center; gap:10px; }
-.expToggle input{ transform:scale(1.1); }
+    .expToggle{ display:flex; align-items:center; gap:10px; cursor:pointer; }
+    .expToggle input{ transform:scale(1.1); }
 
-.expPanel{ display:none; margin-top:10px; }
-.expPanel.show{ display:block; }
+    .expPanel{ display:none; margin-top:10px; }
+    .expPanel.show{ display:block; }
 
-.expGrid{
-  display:grid;
-  grid-template-columns: 110px 1fr; /* 左SKU标签，右输入 */
-  gap:12px 12px;
-  align-items:center;
-}
-.expRow{
-  display:grid;
-  grid-template-columns: 1fr 1fr; /* SKU | EXP */
-  gap:12px;
-  align-items:center;
-}
-.expHeadCell{
-  color: var(--muted);
-  font-size:13px;
-  font-weight:700;
-}
-@media (max-width:420px){
-  .expRow{ grid-template-columns:1fr; } /* 手机太窄就自动变一列 */
-}
+    .expGrid{
+      display:grid;
+      grid-template-columns: 110px 1fr;
+      gap:12px 12px;
+      align-items:center;
+    }
+    .expRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      align-items:center;
+      margin-top:8px;
+    }
+    .expHeadCell{
+      color: var(--muted);
+      font-size:13px;
+      font-weight:700;
+    }
+    @media (max-width:420px){
+      .expRow{ grid-template-columns:1fr; }
+    }
 
-}
-/* EXP table left labels (SKU) */
-.expLabelGrey{
-  color:#cfcfcf;
-  font-weight:700;
-  letter-spacing:.2px;
-}
+    /* EXP table left labels (SKU) */
+    .expLabelGrey{
+      color:#cfcfcf;
+      font-weight:700;
+      letter-spacing:.2px;
+    }
 
-/* EXP table header / accent text */
-.expLabelAccent{
-  color:var(--accent);
-  font-weight:800;
-  font-size:13px;
-}
+    /* EXP table header / accent text */
+    .expLabelAccent{
+      color:var(--accent);
+      font-weight:800;
+      font-size:13px;
+    }
 
-.expInput{
-  width:100%;
-}
-@media (max-width:420px){
-  .expRow{ grid-template-columns: 90px 1fr; }
-  .expLabel{ font-size:14px; }
-}
+    .expInput{
+      width:100%;
+    }
+    @media (max-width:420px){
+      .expRow{ grid-template-columns: 90px 1fr; }
+      .expLabel{ font-size:14px; }
+    }
 
-    
-.skuGrid{
-  display:grid;
-  grid-template-columns: 1fr 220px; /* 左大右小 */
-  gap:12px;
-  align-items:end;
-}
-@media (max-width:420px){
-  .skuGrid{ grid-template-columns: 1fr 170px; }
-}
-.closedBox .btns{ display:flex; gap:10px; justify-content:flex-start; }
-.closedBox label{ margin-top:0; }
+    .skuGrid{
+      display:grid;
+      grid-template-columns: 1fr 220px;
+      gap:12px;
+      align-items:end;
+    }
+    @media (max-width:420px){
+      .skuGrid{ grid-template-columns: 1fr 170px; }
+    }
+    .closedBox .btns{ display:flex; gap:10px; justify-content:flex-start; }
+    .closedBox label{ margin-top:0; }
 
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -162,6 +161,14 @@
       outline:none;
     }
     textarea{min-height:70px; resize:vertical}
+    
+    /* Date field style for readonly */
+    input[readonly]{
+      background:#1a1a1a;
+      border-color:#333;
+      color:#888;
+      cursor:not-allowed;
+    }
 
     .row2{
       display:grid;
@@ -190,10 +197,15 @@
       font-size:13px;
       cursor:pointer;
       user-select:none;
+      transition:all 0.2s;
+    }
+    .pill:hover{
+      background:#1a1a1a;
     }
     .pill.active{
       border-color: rgba(255,92,168,.55);
-      box-shadow: 0 0 0 3px rgba(255,92,168,.12) inset;
+      background:rgba(255,92,168,.12);
+      box-shadow: 0 0 0 3px rgba(255,92,168,.12);
     }
 
     /* Focus SKU */
@@ -231,10 +243,15 @@
       font-size:13px;
       min-width:72px;
       text-align:center;
+      transition:all 0.2s;
+    }
+    .segBtn:hover{
+      background:#1a1a1a;
     }
     .segBtn.active{
       border-color: rgba(255,92,168,.55);
-      box-shadow: 0 0 0 3px rgba(255,92,168,.12) inset;
+      background:rgba(255,92,168,.12);
+      box-shadow: 0 0 0 3px rgba(255,92,168,.12);
     }
 
     /* Delivery expiry */
@@ -254,19 +271,6 @@
       opacity:.92;
       padding-top:8px;
     }
-    /* EXP table left labels (SKU) */
-.expLabelGrey{
-  color:#cfcfcf;
-  font-weight:700;
-  letter-spacing:.2px;
-}
-
-/* EXP table header / accent text */
-.expLabelAccent{
-  color:var(--accent);
-  font-weight:800;
-  font-size:13px;
-}
 
     @media (max-width: 720px){
       .deliveryRow{
@@ -296,6 +300,7 @@
       height:22px;
       margin-top:2px;
       accent-color: #3b82f6;
+      cursor:pointer;
     }
 
     .checkTitleRow{
@@ -355,11 +360,20 @@
       margin:0;
       flex:0 0 auto;
       accent-color:#e5e7eb;
+      cursor:pointer;
     }
     .dRow span{
       color:var(--text);
       font-size:14px;
       line-height:1.2;
+    }
+    
+    /* Cleaning reminder style */
+    .cleaningReminder{
+      margin-top:10px;
+      color:#a0a0a0;
+      font-size:13px;
+      font-style:italic;
     }
 
     .inlineBlock{
@@ -372,6 +386,7 @@
     .inlineBlock input[type="checkbox"]{
       width:18px; height:18px; margin:0;
       accent-color:#e5e7eb;
+      cursor:pointer;
     }
     .inlineBlock .inlineLabel{
       font-size:14px;
@@ -429,6 +444,7 @@
       font-weight:900;
       font-size:16px;
       cursor:pointer;
+      transition:all 0.2s;
     }
     .btn.secondary{
       background:#232323;
@@ -436,10 +452,17 @@
       border:1px solid rgba(255,255,255,.10);
       flex: .7;
     }
+    .btn.secondary:hover{
+      background:#2a2a2a;
+    }
     .btn.primary{
       background:var(--good);
       color:#041006;
       box-shadow: 0 10px 22px rgba(34,197,94,.22);
+    }
+    .btn.primary:hover{
+      background:#16a34a;
+      transform:translateY(-2px);
     }
     .smallHelp{
       margin-top:10px;
@@ -471,7 +494,7 @@
 
         <div>
           <label for="date">Date</label>
-          <input id="date" type="date" />
+          <input id="date" type="text" readonly />
         </div>
       </div>
 
@@ -498,115 +521,109 @@
     </section>
 
     <!-- Focus SKUs -->
-    <section class="card">
+    <section class="card" id="focusSKUs">
       <h2>Focus SKUs (record only)</h2>
 
       <div class="skuBlock">
         <div class="skuTitle">SKU 1</div>
         <div class="skuGrid">
-  <div>
-    <label for="fp1_reco">Recommend Times</label>
-    <input id="fp1_reco" type="number" inputmode="numeric" min="0" value="0" />
-  </div>
+          <div>
+            <label for="fp1_reco">Recommend Times</label>
+            <input id="fp1_reco" type="number" inputmode="numeric" min="0" value="0" />
+          </div>
 
-  <div class="closedBox">
-    <label>Closed</label>
-    <div class="btns segBtns" data-seg="fp1_closed">
-      <div class="segBtn active" data-val="No">No</div>
-      <div class="segBtn" data-val="Yes">Yes</div>
-    </div>
-  </div>
-</div>
-
+          <div class="closedBox">
+            <label>Closed</label>
+            <div class="btns segBtns" data-seg="fp1_closed">
+              <div class="segBtn active" data-val="No">No</div>
+              <div class="segBtn" data-val="Yes">Yes</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="skuBlock">
         <div class="skuTitle">SKU 2</div>
         <div class="skuGrid">
-  <div>
-    <label for="fp2_reco">Recommend Times</label>
-    <input id="fp2_reco" type="number" inputmode="numeric" min="0" value="0" />
-  </div>
+          <div>
+            <label for="fp2_reco">Recommend Times</label>
+            <input id="fp2_reco" type="number" inputmode="numeric" min="0" value="0" />
+          </div>
 
-  <div class="closedBox">
-    <label>Closed</label>
-    <div class="btns segBtns" data-seg="fp2_closed">
-      <div class="segBtn active" data-val="No">No</div>
-      <div class="segBtn" data-val="Yes">Yes</div>
-    </div>
-  </div>
-</div>
-
+          <div class="closedBox">
+            <label>Closed</label>
+            <div class="btns segBtns" data-seg="fp2_closed">
+              <div class="segBtn active" data-val="No">No</div>
+              <div class="segBtn" data-val="Yes">Yes</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="skuBlock">
         <div class="skuTitle">SKU 3</div>
         <div class="skuGrid">
-  <div>
-    <label for="fp3_reco">Recommend Times</label>
-    <input id="fp3_reco" type="number" inputmode="numeric" min="0" value="0" />
-  </div>
+          <div>
+            <label for="fp3_reco">Recommend Times</label>
+            <input id="fp3_reco" type="number" inputmode="numeric" min="0" value="0" />
+          </div>
 
-  <div class="closedBox">
-    <label>Closed</label>
-    <div class="btns segBtns" data-seg="fp3_closed">
-      <div class="segBtn active" data-val="No">No</div>
-      <div class="segBtn" data-val="Yes">Yes</div>
-    </div>
-  </div>
-</div>
-
+          <div class="closedBox">
+            <label>Closed</label>
+            <div class="btns segBtns" data-seg="fp3_closed">
+              <div class="segBtn active" data-val="No">No</div>
+              <div class="segBtn" data-val="Yes">Yes</div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- Delivery expiry check -->
     <div class="card expWrap">
-  <div class="h2">Today's delivery expiry check</div>
+      <h2>Today's delivery expiry check</h2>
 
+      <label class="expToggle">
+        <input type="checkbox" id="exp_hasIssue">
+        <span>Found items with EXP ≤ 8 months</span>
+      </label>
 
-  <label class="expToggle">
-    <input type="checkbox" id="exp_hasIssue">
-    <span>Found items with EXP ≤ 8 months</span>
-  </label>
+      <div id="exp_panel" class="expPanel">
+        <div class="expRow expHead" style="margin-top:10px;">
+          <div class="expHeadCell">SKU</div>
+          <div class="expHeadCell">EXP</div>
+        </div>
 
-  <div id="exp_panel" class="expPanel">
-  <div class="expRow expHead" style="margin-top:10px;">
-    <div class="expHeadCell">SKU</div>
-    <div class="expHeadCell">EXP</div>
-  </div>
+        <div class="expRow">
+          <input class="expInput" id="exp_sku1" placeholder="SKU 1 (name)" autocomplete="off">
+          <input class="expInput" id="exp_exp1" placeholder="EXP (YYYY-MM-DD)" autocomplete="off">
+        </div>
 
-  <div class="expRow">
-    <input class="expInput" id="exp_sku1" placeholder="SKU 1 (name)" autocomplete="off">
-    <input class="expInput" id="exp_exp1" placeholder="EXP (YYYY-MM-DD)" autocomplete="off">
-  </div>
+        <div class="expRow">
+          <input class="expInput" id="exp_sku2" placeholder="SKU 2 (name)" autocomplete="off">
+          <input class="expInput" id="exp_exp2" placeholder="EXP (YYYY-MM-DD)" autocomplete="off">
+        </div>
 
-  <div class="expRow">
-    <input class="expInput" id="exp_sku2" placeholder="SKU 2 (name)" autocomplete="off">
-    <input class="expInput" id="exp_exp2" placeholder="EXP (YYYY-MM-DD)" autocomplete="off">
-  </div>
+        <div class="expRow">
+          <input class="expInput" id="exp_sku3" placeholder="SKU 3 (name)" autocomplete="off">
+          <input class="expInput" id="exp_exp3" placeholder="EXP (YYYY-MM-DD)" autocomplete="off">
+        </div>
 
-  <div class="expRow">
-    <input class="expInput" id="exp_sku3" placeholder="SKU 3 (name)" autocomplete="off">
-    <input class="expInput" id="exp_exp3" placeholder="EXP (YYYY-MM-DD)" autocomplete="off">
-  </div>
+        <div class="expRow">
+          <input class="expInput" id="exp_sku4" placeholder="SKU 4 (name)" autocomplete="off">
+          <input class="expInput" id="exp_exp4" placeholder="EXP (YYYY-MM-DD)" autocomplete="off">
+        </div>
 
-  <div class="expRow">
-    <input class="expInput" id="exp_sku4" placeholder="SKU 4 (name)" autocomplete="off">
-    <input class="expInput" id="exp_exp4" placeholder="EXP (YYYY-MM-DD)" autocomplete="off">
-  </div>
+        <div class="expRow">
+          <input class="expInput" id="exp_sku5" placeholder="SKU 5 (name)" autocomplete="off">
+          <input class="expInput" id="exp_exp5" placeholder="EXP (YYYY-MM-DD)" autocomplete="off">
+        </div>
 
-  <div class="expRow">
-    <input class="expInput" id="exp_sku5" placeholder="SKU 5 (name)" autocomplete="off">
-    <input class="expInput" id="exp_exp5" placeholder="EXP (YYYY-MM-DD)" autocomplete="off">
-  </div>
-
-  <div class="hint" style="margin-top:8px; opacity:.8;">
-    Example: 2026-10-15
-  </div>
-</div>
-
-</div>
-
+        <div class="hint" style="margin-top:8px; opacity:.8;">
+          Example: 2026-10-15
+        </div>
+      </div>
+    </div>
 
     <!-- Checklist -->
     <section class="card">
@@ -631,19 +648,17 @@
               </div>
 
               <div class="detailsGrid" style="margin-top:12px;">
-  <label class="dRow">
-    <input type="checkbox" id="label_missing_chk">
-    <span>Label missing</span>
-  </label>
+                <label class="dRow">
+                  <input type="checkbox" id="label_missing_chk">
+                  <span>Label missing</span>
+                </label>
 
-  <input
-    id="label_missing_text"
-    type="text"
-    placeholder="eg, FD duck head, poop bag, etc"
-    disabled
-  />
-</div>
-
+                <input
+                  id="label_missing_text"
+                  type="text"
+                  placeholder="eg, FD duck head, poop bag, etc"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -685,11 +700,8 @@
             <div class="status" id="clean_status">Not done</div>
 
             <div class="detailsBox">
-              <div class="detailsHead">Details (check if issue)</div>
-              <div class="detailsGrid" id="clean_details">
-                <label class="dRow"><input type="checkbox" data-detail="clean" value="Window not clean"><span>Window not clean</span></label>
-                <label class="dRow"><input type="checkbox" data-detail="clean" value="Floor not clean"><span>Floor not clean</span></label>
-                <label class="dRow"><input type="checkbox" data-detail="clean" value="Restroom not clean"><span>Restroom not clean</span></label>
+              <div class="cleaningReminder">
+                Reminder: Check Window, Floor, Restroom cleanliness
               </div>
             </div>
           </div>
@@ -707,10 +719,10 @@
             <div class="status" id="bsf_status">Not done</div>
 
             <div class="detailsBox">
-              <div class="detailsHead">Details (check if issue)</div>
-              <div class="detailsGrid" id="bsf_details">
-                <label class="dRow"><input type="checkbox" data-detail="bsf" value="Restock needed"><span>Restock needed</span></label>
-              </div>
+              <label class="dRow">
+                <input type="checkbox" data-detail="bsf" value="Restock needed">
+                <span>Restock needed</span>
+              </label>
             </div>
           </div>
         </div>
@@ -749,7 +761,6 @@
               <div class="checkTitle">Trash Out</div>
             </div>
             <div class="status" id="trash_status">Not done</div>
-            <!-- no details box -->
           </div>
         </div>
       </div>
@@ -784,11 +795,10 @@
   </main>
 
   <script>
-    
     // ---------------------------
     // Helpers
     // ---------------------------
-    const WA_PHONE = "12122894416"; // Team WhatsApp number, digits only
+    const WA_PHONE = "12122894416";
     const LS_NAME_KEY = "pg_dl_name_v1";
     const LS_SHIFT_KEY = "pg_dl_shift_v1";
 
@@ -822,7 +832,7 @@
     const $name = document.getElementById("name");
     const $store = document.getElementById("store");
 
-    // default date = today (local)
+    // Set today's date as readonly
     (function(){
       const now = new Date();
       const yyyy = now.getFullYear();
@@ -831,7 +841,7 @@
       $date.value = `${yyyy}-${mm}-${dd}`;
     })();
 
-    // load saved name
+    // Load saved name
     const savedName = localStorage.getItem(LS_NAME_KEY);
     if(savedName) $name.value = savedName;
 
@@ -840,13 +850,23 @@
     });
 
     // ---------------------------
-    // Shift selection
+    // Shift selection with scroll
     // ---------------------------
     const shiftButtons = Array.from(document.querySelectorAll(".pill[data-shift]"));
+    const focusSection = document.getElementById("focusSKUs");
+    
     function setShift(s){
       shiftButtons.forEach(b => b.classList.toggle("active", b.dataset.shift === s));
       localStorage.setItem(LS_SHIFT_KEY, s || "");
+      
+      // Scroll to Focus SKUs section after selecting shift
+      if(focusSection){
+        setTimeout(() => {
+          focusSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
     }
+
     const savedShift = localStorage.getItem(LS_SHIFT_KEY) || "";
     if(savedShift) setShift(savedShift);
 
@@ -872,10 +892,12 @@
         b.classList.toggle("active", b.dataset.val === val);
       });
     }
+
+    // Initialize all to "No"
     segGroups.forEach(wrap => {
       const key = wrap.dataset.seg;
-      // init default "No"
       setSeg(key, "No");
+      
       wrap.addEventListener("click", (e) => {
         const btn = e.target.closest(".segBtn");
         if(!btn) return;
@@ -884,7 +906,7 @@
     });
 
     // ---------------------------
-    // Checklist status text (English only)
+    // Checklist status text
     // ---------------------------
     const mainChecks = [
       ["env_main", "env_status"],
@@ -917,49 +939,37 @@
       updateStatus(m,s);
     });
 
-   const labelMissingChk = document.getElementById("label_missing_chk");
-const labelMissingText = document.getElementById("label_missing_text");
+    // ---------------------------
+    // Label missing field
+    // ---------------------------
+    const labelMissingChk = document.getElementById("label_missing_chk");
+    const labelMissingText = document.getElementById("label_missing_text");
 
-function syncLabelMissing(){
-  const on = labelMissingChk.checked;
-  labelMissingText.disabled = !on;
-  labelMissingText.required = on;
-  if(!on) labelMissingText.value = "";
-}
+    labelMissingChk.addEventListener("change", function() {
+      labelMissingText.disabled = !this.checked;
+      if(!this.checked) labelMissingText.value = "";
+    });
 
-labelMissingChk.addEventListener("change", syncLabelMissing);
-syncLabelMissing();
+    // Initialize label missing text field
+    labelMissingText.disabled = !labelMissingChk.checked;
 
+    // ---------------------------
+    // Delivery EXP toggle
+    // ---------------------------
+    const expChk = document.getElementById("exp_hasIssue");
+    const expPanel = document.getElementById("exp_panel");
+
+    function syncExpPanel(){
+      const on = expChk.checked;
+      expPanel.classList.toggle("show", on);
+    }
+
+    expChk.addEventListener("change", syncExpPanel);
+    syncExpPanel(); // Initialize
 
     // ---------------------------
     // Cash auto difference
     // ---------------------------
-    // ---------------------------
-// Delivery EXP toggle (EXP ≤ 8 months)
-// ---------------------------
-const expChk = document.getElementById("exp_hasIssue");
-const expPanel = document.getElementById("exp_panel");
-
-const expInputs = [1,2,3,4,5].flatMap(i => ([
-  document.getElementById(`exp_sku${i}`),
-  document.getElementById(`exp_exp${i}`)
-]));
-
-function syncExpPanel(){
-  const on = expChk.checked;
-
-  expPanel.classList.toggle("show", on);
-
-  expInputs.forEach(inp => {
-    if(!inp) return;
-    inp.required = on;
-    if(!on) inp.value = "";
-  });
-}
-
-expChk.addEventListener("change", syncExpPanel);
-syncExpPanel();
-
     const $drawer = document.getElementById("drawerCash");
     const $system = document.getElementById("systemCashSales");
     const $diff = document.getElementById("differenceValue");
@@ -971,13 +981,13 @@ syncExpPanel();
       $diff.textContent = `$${diff.toFixed(2)}`;
       $diff.dataset.value = diff.toFixed(2);
     }
+    
     $drawer.addEventListener("input", updateDifference);
     $system.addEventListener("input", updateDifference);
     updateDifference();
 
     // ---------------------------
     // Build WhatsApp message
-    // (No "blank" anywhere; empty stays empty)
     // ---------------------------
     function getShiftLabel(){
       const active = shiftButtons.find(b => b.classList.contains("active"));
@@ -1007,19 +1017,15 @@ syncExpPanel();
         {sku:"SKU 3", reco: document.getElementById("fp3_reco").value ?? "0", closed: segState.fp3_closed},
       ];
 
-      const expHasIssue = document.getElementById("")?.checked;
+      const expHasIssue = document.getElementById("exp_hasIssue").checked;
 
-const expHasIssue = document.getElementById("")?.checked;
-
-const delivery = [1,2,3,4,5].map(i => ({
-  sku: (document.getElementById(`exp_sku${i}`)?.value || "").trim(),
-  exp: (document.getElementById(`exp_exp${i}`)?.value || "").trim()
-}));
-
+      const delivery = [1,2,3,4,5].map(i => ({
+        sku: (document.getElementById(`exp_sku${i}`)?.value || "").trim(),
+        exp: (document.getElementById(`exp_exp${i}`)?.value || "").trim()
+      }));
 
       const envDetails = listCheckedDetails("env");
       const sysDetails = listCheckedDetails("sys");
-      const cleanDetails = listCheckedDetails("clean");
       const bsfDetails = listCheckedDetails("bsf");
       const supDetails = listCheckedDetails("sup");
 
@@ -1031,7 +1037,7 @@ const delivery = [1,2,3,4,5].map(i => ({
       const trashDone = document.getElementById("trash_main").checked;
 
       const labelMissingChecked = labelMissingChk.checked;
-      const labelMissingVal = (labelMissingText.value || "").trim(); // if empty -> empty
+      const labelMissingVal = (labelMissingText.value || "").trim();
 
       const drawer = ($drawer.value || "").trim();
       const systemSales = ($system.value || "").trim();
@@ -1056,18 +1062,17 @@ const delivery = [1,2,3,4,5].map(i => ({
       lines.push(``);
 
       // Delivery (only if checked)
-lines.push(`Delivery Expiry Check (EXP ≤ 8 months)`);
-lines.push(`Found items: ${expHasIssue ? "Yes" : "No"}`);
+      lines.push(`Delivery Expiry Check (EXP ≤ 8 months)`);
+      lines.push(`Found items: ${expHasIssue ? "Yes" : "No"}`);
 
-if(expHasIssue){
-  delivery.forEach((d, idx) => {
-    if(d.sku || d.exp){
-      lines.push(`SKU ${idx+1} — ${d.sku} | EXP: ${d.exp}`);
-    }
-  });
-}
-lines.push(``);
-
+      if(expHasIssue){
+        delivery.forEach((d, idx) => {
+          if(d.sku || d.exp){
+            lines.push(`SKU ${idx+1} — ${d.sku} | EXP: ${d.exp}`);
+          }
+        });
+      }
+      lines.push(``);
 
       // Checklist summary
       function doneText(b){ return b ? "Done" : "Not done"; }
@@ -1075,15 +1080,13 @@ lines.push(``);
       lines.push(`Checklist`);
       lines.push(`Environment Normal: ${doneText(envDone)}`);
       if(envDetails.length) lines.push(`- Issues: ${envDetails.join(", ")}`);
-      // Label missing line must appear in WhatsApp always
       lines.push(`- Label missing checked: ${labelMissingChecked ? "Yes" : "No"}`);
-      lines.push(`- Label missing: ${labelMissingVal}`); // empty stays empty
+      if(labelMissingVal) lines.push(`- Label missing: ${labelMissingVal}`);
 
       lines.push(`System Normal: ${doneText(sysDone)}`);
       if(sysDetails.length) lines.push(`- Issues: ${sysDetails.join(", ")}`);
 
       lines.push(`Cleaning Check: ${doneText(cleanDone)}`);
-      if(cleanDetails.length) lines.push(`- Issues: ${cleanDetails.join(", ")}`);
 
       lines.push(`Bin, Shelf & Freezer Ready: ${doneText(bsfDone)}`);
       if(bsfDetails.length) lines.push(`- Issues: ${bsfDetails.join(", ")}`);
@@ -1098,7 +1101,7 @@ lines.push(``);
       lines.push(`Cash`);
       lines.push(`Drawer Cash: ${drawer}`);
       lines.push(`System Cash Sales: ${systemSales}`);
-      lines.push(`Difference (Drawer - System): ${diffVal}`);
+      lines.push(`Difference: ${diffVal}`);
 
       return lines.join("\n");
     }
@@ -1114,31 +1117,30 @@ lines.push(``);
       window.scrollTo({top: 0, behavior: "smooth"});
     });
 
-    document.getElementByIddocument.getElementById("btnSend").addEventListener("click", () => {
-
-  // Label missing must be filled if checked
-  if(labelMissingChk.checked && !labelMissingText.value.trim()){
-    alert("Please fill in items for: Label missing.");
-    labelMissingText.focus();
-    return;
-  }
-
-  // EXP must be filled if checked
-  if(expHasIssue){
-    for(let i=1;i<=5;i++){
-      const sku = document.getElementById(`exp_sku${i}`);
-      const exp = document.getElementById(`exp_exp${i}`);
-      if((sku && sku.value.trim()) && (!exp || !exp.value.trim())){
-        alert("Please fill EXP for all listed delivery items.");
-        exp.focus();
+    // Send button with validation
+    document.getElementById("btnSend").addEventListener("click", () => {
+      // Label missing must be filled if checked
+      if(labelMissingChk.checked && !labelMissingText.value.trim()){
+        alert("Please fill in items for: Label missing.");
+        labelMissingText.focus();
         return;
       }
-    }
-  }
 
-  openWhatsApp();
-});
-("btnSend").addEventListener("click", openWhatsApp);
+      // EXP must be filled if checked
+      if(expChk.checked){
+        for(let i=1; i<=5; i++){
+          const sku = document.getElementById(`exp_sku${i}`);
+          const exp = document.getElementById(`exp_exp${i}`);
+          if(sku && sku.value.trim() && exp && !exp.value.trim()){
+            alert(`Please fill EXP for SKU ${i}.`);
+            exp.focus();
+            return;
+          }
+        }
+      }
+
+      openWhatsApp();
+    });
 
     // ---------------------------
     // Service worker (optional)
