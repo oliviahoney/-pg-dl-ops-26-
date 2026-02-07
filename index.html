@@ -45,15 +45,34 @@
 }
 .expRow{
   display:grid;
-  grid-template-columns: 110px 1fr; /* 每行两列 */
+  grid-template-columns: 1fr 1fr; /* SKU | EXP */
   gap:12px;
   align-items:center;
 }
-.expLabel{
+.expHeadCell{
+  color: var(--muted);
+  font-size:13px;
+  font-weight:700;
+}
+@media (max-width:420px){
+  .expRow{ grid-template-columns:1fr; } /* 手机太窄就自动变一列 */
+}
+
+}
+/* EXP table left labels (SKU) */
+.expLabelGrey{
   color:#cfcfcf;
   font-weight:700;
   letter-spacing:.2px;
 }
+
+/* EXP table header / accent text */
+.expLabelAccent{
+  color:var(--accent);
+  font-weight:800;
+  font-size:13px;
+}
+
 .expInput{
   width:100%;
 }
@@ -190,15 +209,6 @@
       font-weight:800;
       margin:0 0 10px;
     }
-    .focusGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-      align-items:end;
-    }
-    @media (max-width: 560px){
-      .focusGrid{grid-template-columns:1fr}
-    }
 
     .seg{
       display:flex;
@@ -244,12 +254,20 @@
       opacity:.92;
       padding-top:8px;
     }
-    .expLabel{
-      color:var(--accent);
-      font-weight:800;
-      font-size:13px;
-      padding-top:8px;
-    }
+    /* EXP table left labels (SKU) */
+.expLabelGrey{
+  color:#cfcfcf;
+  font-weight:700;
+  letter-spacing:.2px;
+}
+
+/* EXP table header / accent text */
+.expLabelAccent{
+  color:var(--accent);
+  font-weight:800;
+  font-size:13px;
+}
+
     @media (max-width: 720px){
       .deliveryRow{
         grid-template-columns: 110px 1fr;
@@ -485,62 +503,59 @@
 
       <div class="skuBlock">
         <div class="skuTitle">SKU 1</div>
-        <div class="focusGrid">
-          <div>
-            <label for="fp1_reco">Recommend Times</label>
-            <input id="fp1_reco" type="number" inputmode="numeric" min="0" value="0" />
-          </div>
+        <div class="skuGrid">
+  <div>
+    <label for="fp1_reco">Recommend Times</label>
+    <input id="fp1_reco" type="number" inputmode="numeric" min="0" value="0" />
+  </div>
 
-          <div>
-            <label>Closed</label>
-            <div class="seg">
-              <div class="segBtns" data-seg="fp1_closed">
-                <div class="segBtn active" data-val="No">No</div>
-                <div class="segBtn" data-val="Yes">Yes</div>
-              </div>
-            </div>
-          </div>
-        </div>
+  <div class="closedBox">
+    <label>Closed</label>
+    <div class="btns segBtns" data-seg="fp1_closed">
+      <div class="segBtn active" data-val="No">No</div>
+      <div class="segBtn" data-val="Yes">Yes</div>
+    </div>
+  </div>
+</div>
+
       </div>
 
       <div class="skuBlock">
         <div class="skuTitle">SKU 2</div>
-        <div class="focusGrid">
-          <div>
-            <label for="fp2_reco">Recommend Times</label>
-            <input id="fp2_reco" type="number" inputmode="numeric" min="0" value="0" />
-          </div>
+        <div class="skuGrid">
+  <div>
+    <label for="fp2_reco">Recommend Times</label>
+    <input id="fp2_reco" type="number" inputmode="numeric" min="0" value="0" />
+  </div>
 
-          <div>
-            <label>Closed</label>
-            <div class="seg">
-              <div class="segBtns" data-seg="fp2_closed">
-                <div class="segBtn active" data-val="No">No</div>
-                <div class="segBtn" data-val="Yes">Yes</div>
-              </div>
-            </div>
-          </div>
-        </div>
+  <div class="closedBox">
+    <label>Closed</label>
+    <div class="btns segBtns" data-seg="fp2_closed">
+      <div class="segBtn active" data-val="No">No</div>
+      <div class="segBtn" data-val="Yes">Yes</div>
+    </div>
+  </div>
+</div>
+
       </div>
 
       <div class="skuBlock">
         <div class="skuTitle">SKU 3</div>
-        <div class="focusGrid">
-          <div>
-            <label for="fp3_reco">Recommend Times</label>
-            <input id="fp3_reco" type="number" inputmode="numeric" min="0" value="0" />
-          </div>
+        <div class="skuGrid">
+  <div>
+    <label for="fp3_reco">Recommend Times</label>
+    <input id="fp3_reco" type="number" inputmode="numeric" min="0" value="0" />
+  </div>
 
-          <div>
-            <label>Closed</label>
-            <div class="seg">
-              <div class="segBtns" data-seg="fp3_closed">
-                <div class="segBtn active" data-val="No">No</div>
-                <div class="segBtn" data-val="Yes">Yes</div>
-              </div>
-            </div>
-          </div>
-        </div>
+  <div class="closedBox">
+    <label>Closed</label>
+    <div class="btns segBtns" data-seg="fp3_closed">
+      <div class="segBtn active" data-val="No">No</div>
+      <div class="segBtn" data-val="Yes">Yes</div>
+    </div>
+  </div>
+</div>
+
       </div>
     </section>
 
@@ -555,46 +570,41 @@
   </label>
 
   <div id="exp_panel" class="expPanel">
-    <div class="expRow" style="margin-top:10px;">
-      <div class="expLabel">SKU</div>
-      <div class="expLabel">EXP</div>
-    </div>
-
-    <!-- 5 rows, each row = 2 columns -->
-    <div class="expRow">
-      <div class="expLabel">SKU 1</div>
-      <input class="expInput" id="exp_sku1" placeholder="" autocomplete="off">
-      <div class="expLabel" style="display:none;"></div>
-    </div>
-
-    <div class="expRow">
-      <div class="expLabel">SKU 2</div>
-      <input class="expInput" id="exp_sku2" placeholder="" autocomplete="off">
-      <div class="expLabel" style="display:none;"></div>
-    </div>
-
-    <div class="expRow">
-      <div class="expLabel">SKU 3</div>
-      <input class="expInput" id="exp_sku3" placeholder="" autocomplete="off">
-      <div class="expLabel" style="display:none;"></div>
-    </div>
-
-    <div class="expRow">
-      <div class="expLabel">SKU 4</div>
-      <input class="expInput" id="exp_sku4" placeholder="" autocomplete="off">
-      <div class="expLabel" style="display:none;"></div>
-    </div>
-
-    <div class="expRow">
-      <div class="expLabel">SKU 5</div>
-      <input class="expInput" id="exp_sku5" placeholder="" autocomplete="off">
-      <div class="expLabel" style="display:none;"></div>
-    </div>
-
-    <div class="hint" style="margin-top:8px; opacity:.8;">
-      Format example: 2026-10-15 or Oct 15, 2026
-    </div>
+  <div class="expRow expHead" style="margin-top:10px;">
+    <div class="expHeadCell">SKU</div>
+    <div class="expHeadCell">EXP</div>
   </div>
+
+  <div class="expRow">
+    <input class="expInput" id="exp_sku1" placeholder="SKU 1 (name)" autocomplete="off">
+    <input class="expInput" id="exp_exp1" placeholder="EXP (YYYY-MM-DD)" autocomplete="off">
+  </div>
+
+  <div class="expRow">
+    <input class="expInput" id="exp_sku2" placeholder="SKU 2 (name)" autocomplete="off">
+    <input class="expInput" id="exp_exp2" placeholder="EXP (YYYY-MM-DD)" autocomplete="off">
+  </div>
+
+  <div class="expRow">
+    <input class="expInput" id="exp_sku3" placeholder="SKU 3 (name)" autocomplete="off">
+    <input class="expInput" id="exp_exp3" placeholder="EXP (YYYY-MM-DD)" autocomplete="off">
+  </div>
+
+  <div class="expRow">
+    <input class="expInput" id="exp_sku4" placeholder="SKU 4 (name)" autocomplete="off">
+    <input class="expInput" id="exp_exp4" placeholder="EXP (YYYY-MM-DD)" autocomplete="off">
+  </div>
+
+  <div class="expRow">
+    <input class="expInput" id="exp_sku5" placeholder="SKU 5 (name)" autocomplete="off">
+    <input class="expInput" id="exp_exp5" placeholder="EXP (YYYY-MM-DD)" autocomplete="off">
+  </div>
+
+  <div class="hint" style="margin-top:8px; opacity:.8;">
+    Example: 2026-10-15
+  </div>
+</div>
+
 </div>
 
 
@@ -620,13 +630,20 @@
                 <label class="dRow"><input type="checkbox" data-detail="env" value="AC/Heat issue"><span>AC/Heat issue</span></label>
               </div>
 
-              <div class="inlineBlock" style="margin-top:12px;">
-                <input type="checkbox" id="label_missing_chk" />
-                <div class="inlineLabel">Label missing</div>
-              </div>
-              <div class="noteInput">
-                <input id="label_missing_text" type="text" placeholder="eg, FD duck head, poop bag, etc" />
-              </div>
+              <div class="detailsGrid" style="margin-top:12px;">
+  <label class="dRow">
+    <input type="checkbox" id="label_missing_chk">
+    <span>Label missing</span>
+  </label>
+
+  <input
+    id="label_missing_text"
+    type="text"
+    placeholder="eg, FD duck head, poop bag, etc"
+    disabled
+  />
+</div>
+
             </div>
           </div>
         </div>
@@ -900,17 +917,49 @@
       updateStatus(m,s);
     });
 
-    // Label missing checkbox + input (keep placeholder in UI, but WhatsApp should show blank if empty)
-    const labelMissingChk = document.getElementById("label_missing_chk");
-    const labelMissingText = document.getElementById("label_missing_text");
-    labelMissingChk.addEventListener("change", () => {
-      // If unchecked, do not clear text (you wanted accountability); keep text as is.
-      // If they typed but didn't check, you will see that mismatch.
-    });
+   const labelMissingChk = document.getElementById("label_missing_chk");
+const labelMissingText = document.getElementById("label_missing_text");
+
+function syncLabelMissing(){
+  const on = labelMissingChk.checked;
+  labelMissingText.disabled = !on;
+  labelMissingText.required = on;
+  if(!on) labelMissingText.value = "";
+}
+
+labelMissingChk.addEventListener("change", syncLabelMissing);
+syncLabelMissing();
+
 
     // ---------------------------
     // Cash auto difference
     // ---------------------------
+    // ---------------------------
+// Delivery EXP toggle (EXP ≤ 8 months)
+// ---------------------------
+const expChk = document.getElementById("exp_hasIssue");
+const expPanel = document.getElementById("exp_panel");
+
+const expInputs = [1,2,3,4,5].flatMap(i => ([
+  document.getElementById(`exp_sku${i}`),
+  document.getElementById(`exp_exp${i}`)
+]));
+
+function syncExpPanel(){
+  const on = expChk.checked;
+
+  expPanel.classList.toggle("show", on);
+
+  expInputs.forEach(inp => {
+    if(!inp) return;
+    inp.required = on;
+    if(!on) inp.value = "";
+  });
+}
+
+expChk.addEventListener("change", syncExpPanel);
+syncExpPanel();
+
     const $drawer = document.getElementById("drawerCash");
     const $system = document.getElementById("systemCashSales");
     const $diff = document.getElementById("differenceValue");
@@ -958,12 +1007,15 @@
         {sku:"SKU 3", reco: document.getElementById("fp3_reco").value ?? "0", closed: segState.fp3_closed},
       ];
 
-      const expHasIssue = document.getElementById("exp_hasIssue")?.checked;
+      const expHasIssue = document.getElementById("")?.checked;
+
+const expHasIssue = document.getElementById("")?.checked;
 
 const delivery = [1,2,3,4,5].map(i => ({
-  sku: `SKU ${i}`,
-  exp: (document.getElementById(`exp_sku${i}`)?.value || "").trim()
+  sku: (document.getElementById(`exp_sku${i}`)?.value || "").trim(),
+  exp: (document.getElementById(`exp_exp${i}`)?.value || "").trim()
 }));
+
 
       const envDetails = listCheckedDetails("env");
       const sysDetails = listCheckedDetails("sys");
@@ -1003,13 +1055,19 @@ const delivery = [1,2,3,4,5].map(i => ({
       });
       lines.push(``);
 
-      // Delivery
-      lines.push(`Delivery Expiry Check (if < 8 months)`);
-      delivery.forEach((d, idx) => {
-        const skuLabel = `SKU ${idx+1}`;
-        lines.push(`${skuLabel}: ${d.sku} | EXP: ${d.exp}`);
-      });
-      lines.push(``);
+      // Delivery (only if checked)
+lines.push(`Delivery Expiry Check (EXP ≤ 8 months)`);
+lines.push(`Found items: ${expHasIssue ? "Yes" : "No"}`);
+
+if(expHasIssue){
+  delivery.forEach((d, idx) => {
+    if(d.sku || d.exp){
+      lines.push(`SKU ${idx+1} — ${d.sku} | EXP: ${d.exp}`);
+    }
+  });
+}
+lines.push(``);
+
 
       // Checklist summary
       function doneText(b){ return b ? "Done" : "Not done"; }
