@@ -63,20 +63,6 @@
       .expRow{ grid-template-columns:1fr; }
     }
 
-    /* EXP table left labels (SKU) */
-    .expLabelGrey{
-      color:#cfcfcf;
-      font-weight:700;
-      letter-spacing:.2px;
-    }
-
-    /* EXP table header / accent text */
-    .expLabelAccent{
-      color:var(--accent);
-      font-weight:800;
-      font-size:13px;
-    }
-
     .expInput{
       width:100%;
     }
@@ -330,9 +316,10 @@
       font-weight:700;
     }
 
+    /* All details in 2-column grid */
     .detailsGrid{
       display:grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, 1fr);
       gap:10px;
     }
     @media (max-width: 560px){
@@ -564,10 +551,6 @@
             </div>
           </div>
         </div>
-
-        <div class="btnRow">
-          <button class="btn primary" type="button" id="btnContinue">Continue</button>
-        </div>
       </section>
     </main>
   </div>
@@ -642,7 +625,7 @@
       <!-- Delivery expiry check -->
       <div class="card expWrap">
         <h2>Today's delivery expiry check</h2>
-        <div class="subline">Food, Topper, Treats, Supplement</div>
+        <div class="subline">Food, Topper, Treats, Supplement - EXP mm/dd/yyyy</div>
 
         <label class="expToggle">
           <input type="checkbox" id="exp_hasIssue">
@@ -657,27 +640,27 @@
 
           <div class="expRow">
             <input class="expInput" id="exp_sku1" placeholder="" autocomplete="off">
-            <input class="expInput date-format" id="exp_exp1" placeholder="mm/dd/yyyy" autocomplete="off">
+            <input class="expInput date-format" id="exp_exp1" placeholder="" autocomplete="off">
           </div>
 
           <div class="expRow">
             <input class="expInput" id="exp_sku2" placeholder="" autocomplete="off">
-            <input class="expInput date-format" id="exp_exp2" placeholder="mm/dd/yyyy" autocomplete="off">
+            <input class="expInput date-format" id="exp_exp2" placeholder="" autocomplete="off">
           </div>
 
           <div class="expRow">
             <input class="expInput" id="exp_sku3" placeholder="" autocomplete="off">
-            <input class="expInput date-format" id="exp_exp3" placeholder="mm/dd/yyyy" autocomplete="off">
+            <input class="expInput date-format" id="exp_exp3" placeholder="" autocomplete="off">
           </div>
 
           <div class="expRow">
             <input class="expInput" id="exp_sku4" placeholder="" autocomplete="off">
-            <input class="expInput date-format" id="exp_exp4" placeholder="mm/dd/yyyy" autocomplete="off">
+            <input class="expInput date-format" id="exp_exp4" placeholder="" autocomplete="off">
           </div>
 
           <div class="expRow">
             <input class="expInput" id="exp_sku5" placeholder="" autocomplete="off">
-            <input class="expInput date-format" id="exp_exp5" placeholder="mm/dd/yyyy" autocomplete="off">
+            <input class="expInput date-format" id="exp_exp5" placeholder="" autocomplete="off">
           </div>
         </div>
       </div>
@@ -724,6 +707,7 @@
                     id="label_missing_text"
                     type="text"
                     placeholder="eg, FD duck head, poop bag, etc"
+                    disabled
                   />
                 </div>
               </div>
@@ -793,7 +777,7 @@
       <section class="card">
         <div class="btnRow">
           <button class="btn secondary" type="button" id="btnBackOpening">Back</button>
-          <button class="btn primary" type="button" id="btnSendOpening">Submit &amp; Send (WhatsApp)</button>
+          <button class="btn primary" type="button" id="btnSendOpening">Submit to WhatsApp</button>
         </div>
       </section>
     </main>
@@ -851,7 +835,7 @@
       <section class="card">
         <div class="btnRow">
           <button class="btn secondary" type="button" id="btnBackMid">Back</button>
-          <button class="btn primary" type="button" id="btnSendMid">Submit &amp; Send (WhatsApp)</button>
+          <button class="btn primary" type="button" id="btnSendMid">Submit to WhatsApp</button>
         </div>
       </section>
     </main>
@@ -955,15 +939,15 @@
           </div>
         </div>
 
-        <!-- Bin, Shelf & Freezer Ready -->
+        <!-- Freezers not working -->
         <div class="checkItem">
           <div class="checkHeader">
-            <input class="checkMain" type="checkbox" id="bsf_main_closing" />
+            <input class="checkMain" type="checkbox" id="freezers_not_working_main" />
             <div>
               <div class="checkTitleRow">
-                <div class="checkTitle">Bin, Shelf &amp; Freezer Ready</div>
+                <div class="checkTitle">Freezers not working</div>
               </div>
-              <div class="status" id="bsf_status_closing">Not done</div>
+              <div class="status" id="freezers_not_working_status">Not done</div>
             </div>
           </div>
         </div>
@@ -982,11 +966,57 @@
         </div>
       </section>
 
+      <!-- Supplies Check -->
+      <div class="checkItem">
+        <div class="checkHeader">
+          <input class="checkMain" type="checkbox" id="sup_main_closing" />
+          <div>
+            <div class="checkTitleRow">
+              <div class="checkTitle">Supplies Check</div>
+            </div>
+            <div class="status" id="sup_status_closing">Not done</div>
+
+            <div class="detailsBox">
+              <div class="detailsHead">Details (check if apply)</div>
+              <div class="detailsGrid" id="sup_details_closing">
+                <label class="dRow"><input type="checkbox" data-detail="sup" value="Receipt paper ≤ 3 rolls"><span>Receipt paper ≤ 3 rolls</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="sup" value="Printer cartridge ≤ 15%"><span>Printer cartridge ≤ 15%</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="sup" value="Price label ≤ 1 roll"><span>Price label ≤ 1 roll</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="sup" value="Fabuloso need it next week"><span>Fabuloso need it next week</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="sup" value="Trash Bag = 1 roll"><span>Trash Bag = 1 roll</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cash -->
+      <section class="card">
+        <h2>Cash</h2>
+
+        <div class="cashGrid">
+          <div>
+            <label for="drawerCash">Drawer Cash ($)</label>
+            <input id="drawerCash" type="number" inputmode="decimal" placeholder="" />
+          </div>
+
+          <div>
+            <label for="systemCashSales">System Cash Sales ($)</label>
+            <input id="systemCashSales" type="number" inputmode="decimal" placeholder="" />
+          </div>
+        </div>
+
+        <div class="diffRow">
+          <div class="diffLabel">Difference</div>
+          <div class="diffValue" id="differenceValue">$0.00</div>
+        </div>
+      </section>
+
       <!-- Submit button -->
       <section class="card">
         <div class="btnRow">
           <button class="btn secondary" type="button" id="btnBackClosing">Back</button>
-          <button class="btn primary" type="button" id="btnSendClosing">Submit &amp; Send (WhatsApp)</button>
+          <button class="btn primary" type="button" id="btnSendClosing">Submit to WhatsApp</button>
         </div>
       </section>
     </main>
@@ -1062,7 +1092,7 @@
       // Show the requested page
       document.getElementById(pageId).classList.add('active');
       
-      // Update header info if needed
+      // Update header info
       updateHeaderInfo(pageId);
     }
     
@@ -1121,38 +1151,31 @@
         localStorage.setItem(LS_STORE_KEY, userData.store);
       });
 
-      // Operation buttons
+      // Operation buttons - auto jump on click
       const operationButtons = Array.from(document.querySelectorAll(".pill[data-operation]"));
       
       operationButtons.forEach(btn => {
         btn.addEventListener("click", () => {
-          operationButtons.forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
+          if (!userData.name.trim()) {
+            alert("Please enter your name.");
+            document.getElementById("name").focus();
+            return;
+          }
+          
           userData.operation = btn.dataset.operation;
+          
+          // Navigate to the appropriate page
+          if (userData.operation === "opening") {
+            showPage("pageOpening");
+            resetOpeningPage();
+          } else if (userData.operation === "mid") {
+            showPage("pageMid");
+            resetMidPage();
+          } else if (userData.operation === "closing") {
+            showPage("pageClosing");
+            resetClosingPage();
+          }
         });
-      });
-
-      // Continue button
-      document.getElementById("btnContinue").addEventListener("click", () => {
-        if (!userData.operation) {
-          alert("Please select an operation.");
-          return;
-        }
-        
-        if (!userData.name.trim()) {
-          alert("Please enter your name.");
-          document.getElementById("name").focus();
-          return;
-        }
-        
-        // Navigate to the appropriate page
-        if (userData.operation === "opening") {
-          showPage("pageOpening");
-        } else if (userData.operation === "mid") {
-          showPage("pageMid");
-        } else if (userData.operation === "closing") {
-          showPage("pageClosing");
-        }
       });
     }
 
@@ -1184,7 +1207,7 @@
         });
       }
 
-      // Initialize all to "No"
+      // Initialize all to "No" and set up event listeners
       segGroupsOpening.forEach(wrap => {
         const key = wrap.dataset.seg;
         setSegOpening(key, "No");
@@ -1255,6 +1278,19 @@
             freezerOtherText.value = "";
           }
         });
+      });
+
+      // ---------------------------
+      // Label missing text field
+      // ---------------------------
+      const labelMissingChk = document.getElementById("label_missing_chk");
+      const labelMissingText = document.getElementById("label_missing_text");
+      
+      labelMissingChk.addEventListener("change", function() {
+        labelMissingText.disabled = !this.checked;
+        if (!this.checked) {
+          labelMissingText.value = "";
+        }
       });
 
       // ---------------------------
@@ -1336,6 +1372,56 @@
     }
 
     // ---------------------------
+    // Reset Opening Page
+    // ---------------------------
+    function resetOpeningPage() {
+      // Reset all form fields
+      document.querySelectorAll('#pageOpening input[type="text"], #pageOpening input[type="number"]').forEach(input => {
+        if (input.id !== 'exp_hasIssue') {
+          input.value = '';
+        }
+      });
+      
+      // Reset checkboxes
+      document.querySelectorAll('#pageOpening input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+      });
+      
+      // Reset segmented buttons to "No"
+      document.querySelectorAll('#pageOpening .segBtns[data-seg]').forEach(wrap => {
+        const key = wrap.dataset.seg;
+        const noBtn = wrap.querySelector('.segBtn[data-val="No"]');
+        if (noBtn) {
+          wrap.querySelectorAll('.segBtn').forEach(b => b.classList.remove('active'));
+          noBtn.classList.add('active');
+        }
+      });
+      
+      // Reset status
+      document.querySelectorAll('#pageOpening .status').forEach(status => {
+        status.textContent = 'Not done';
+      });
+      
+      // Reset EXP panel
+      document.getElementById('exp_hasIssue').checked = false;
+      document.getElementById('exp_panel').classList.remove('show');
+      
+      // Reset freezer issue
+      document.getElementById('freezer_issue').checked = false;
+      document.getElementById('freezer_suboptions').style.display = 'none';
+      document.querySelectorAll('input[name="freezer_problem"]').forEach(radio => {
+        radio.checked = false;
+      });
+      document.getElementById('freezer_other_text').style.display = 'none';
+      document.getElementById('freezer_other_text').value = '';
+      
+      // Reset label missing
+      document.getElementById('label_missing_chk').checked = false;
+      document.getElementById('label_missing_text').disabled = true;
+      document.getElementById('label_missing_text').value = '';
+    }
+
+    // ---------------------------
     // Page 3: Mid Operation
     // ---------------------------
     function initializeMidPage() {
@@ -1374,6 +1460,20 @@
       // ---------------------------
       document.getElementById("btnSendMid").addEventListener("click", () => {
         sendWhatsAppMessage("mid");
+      });
+    }
+
+    // ---------------------------
+    // Reset Mid Page
+    // ---------------------------
+    function resetMidPage() {
+      // Reset all checkboxes and timestamps
+      document.querySelectorAll('#pageMid input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+      });
+      
+      document.querySelectorAll('#pageMid .mid-time').forEach(timeEl => {
+        timeEl.textContent = '';
       });
     }
 
@@ -1423,8 +1523,9 @@
       const mainChecksClosing = [
         ["things_off_main", "things_off_status"],
         ["freezer_on_main", "freezer_on_status"],
-        ["bsf_main_closing", "bsf_status_closing"],
-        ["trash_main_closing", "trash_status_closing"]
+        ["freezers_not_working_main", "freezers_not_working_status"],
+        ["trash_main_closing", "trash_status_closing"],
+        ["sup_main_closing", "sup_status_closing"]
       ];
 
       function updateStatusClosing(mainId, statusId){
@@ -1450,11 +1551,72 @@
       });
 
       // ---------------------------
+      // Cash auto difference
+      // ---------------------------
+      const $drawer = document.getElementById("drawerCash");
+      const $system = document.getElementById("systemCashSales");
+      const $diff = document.getElementById("differenceValue");
+
+      function updateDifference(){
+        const drawer = toNum($drawer.value);
+        const system = toNum($system.value);
+        const diff = drawer - system;
+        $diff.textContent = `$${diff.toFixed(2)}`;
+        $diff.dataset.value = diff.toFixed(2);
+      }
+      
+      $drawer.addEventListener("input", updateDifference);
+      $system.addEventListener("input", updateDifference);
+      updateDifference();
+
+      // ---------------------------
       // Send button for Closing
       // ---------------------------
       document.getElementById("btnSendClosing").addEventListener("click", () => {
+        // Cash fields should be filled
+        if (!$drawer.value.trim() || !$system.value.trim()) {
+          alert("Please fill in cash drawer and system cash sales.");
+          if (!$drawer.value.trim()) $drawer.focus();
+          else $system.focus();
+          return;
+        }
+
         sendWhatsAppMessage("closing");
       });
+    }
+
+    // ---------------------------
+    // Reset Closing Page
+    // ---------------------------
+    function resetClosingPage() {
+      // Reset all form fields
+      document.querySelectorAll('#pageClosing input[type="text"], #pageClosing input[type="number"]').forEach(input => {
+        input.value = '';
+      });
+      
+      // Reset checkboxes
+      document.querySelectorAll('#pageClosing input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+      });
+      
+      // Reset segmented buttons to "No"
+      document.querySelectorAll('#pageClosing .segBtns[data-seg]').forEach(wrap => {
+        const key = wrap.dataset.seg;
+        const noBtn = wrap.querySelector('.segBtn[data-val="No"]');
+        if (noBtn) {
+          wrap.querySelectorAll('.segBtn').forEach(b => b.classList.remove('active'));
+          noBtn.classList.add('active');
+        }
+      });
+      
+      // Reset status
+      document.querySelectorAll('#pageClosing .status').forEach(status => {
+        status.textContent = 'Not done';
+      });
+      
+      // Reset cash difference
+      document.getElementById('differenceValue').textContent = '$0.00';
+      document.getElementById('differenceValue').dataset.value = '0.00';
     }
 
     // ---------------------------
@@ -1464,6 +1626,18 @@
       const msg = buildMessage(operationType);
       const url = `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(msg)}`;
       window.open(url, "_blank");
+      
+      // After sending, reset the current page and go back to home
+      setTimeout(() => {
+        if (operationType === "opening") {
+          resetOpeningPage();
+        } else if (operationType === "mid") {
+          resetMidPage();
+        } else if (operationType === "closing") {
+          resetClosingPage();
+        }
+        showPage("page1");
+      }, 500);
     }
 
     function buildMessage(operationType) {
@@ -1480,9 +1654,9 @@
       if (operationType === "opening") {
         // Focus SKUs for opening
         const fp = [
-          {sku:"SKU 1", reco: document.getElementById("fp1_reco").value ?? "0", closed: getSegState("fp1_closed", "opening")},
-          {sku:"SKU 2", reco: document.getElementById("fp2_reco").value ?? "0", closed: getSegState("fp2_closed", "opening")},
-          {sku:"SKU 3", reco: document.getElementById("fp3_reco").value ?? "0", closed: getSegState("fp3_closed", "opening")},
+          {sku:"SKU 1", reco: document.getElementById("fp1_reco").value ?? "0", closed: getSegState("fp1_closed", "Opening")},
+          {sku:"SKU 2", reco: document.getElementById("fp2_reco").value ?? "0", closed: getSegState("fp2_closed", "Opening")},
+          {sku:"SKU 3", reco: document.getElementById("fp3_reco").value ?? "0", closed: getSegState("fp3_closed", "Opening")},
         ];
 
         const expHasIssue = document.getElementById("exp_hasIssue").checked;
@@ -1573,15 +1747,22 @@
       } else if (operationType === "closing") {
         // Focus SKUs for closing
         const fpClosing = [
-          {sku:"SKU 1", reco: document.getElementById("fp1_reco_closing").value ?? "0", closed: getSegState("fp1_closed_closing", "closing")},
-          {sku:"SKU 2", reco: document.getElementById("fp2_reco_closing").value ?? "0", closed: getSegState("fp2_closed_closing", "closing")},
-          {sku:"SKU 3", reco: document.getElementById("fp3_reco_closing").value ?? "0", closed: getSegState("fp3_closed_closing", "closing")},
+          {sku:"SKU 1", reco: document.getElementById("fp1_reco_closing").value ?? "0", closed: getSegState("fp1_closed_closing", "Closing")},
+          {sku:"SKU 2", reco: document.getElementById("fp2_reco_closing").value ?? "0", closed: getSegState("fp2_closed_closing", "Closing")},
+          {sku:"SKU 3", reco: document.getElementById("fp3_reco_closing").value ?? "0", closed: getSegState("fp3_closed_closing", "Closing")},
         ];
 
         const thingsOffDone = document.getElementById("things_off_main").checked;
         const freezerOnDone = document.getElementById("freezer_on_main").checked;
-        const bsfDoneClosing = document.getElementById("bsf_main_closing").checked;
+        const freezersNotWorkingDone = document.getElementById("freezers_not_working_main").checked;
         const trashDoneClosing = document.getElementById("trash_main_closing").checked;
+        const supDoneClosing = document.getElementById("sup_main_closing").checked;
+        
+        const supDetailsClosing = listCheckedDetails("sup", "pageClosing");
+
+        const drawer = document.getElementById("drawerCash").value.trim();
+        const systemSales = document.getElementById("systemCashSales").value.trim();
+        const diffVal = document.getElementById("differenceValue").dataset.value ?? "";
 
         // Focus SKUs
         lines.push(`Focus SKUs`);
@@ -1597,8 +1778,17 @@
         lines.push(`Checklist`);
         lines.push(`Things OFF: ${doneText(thingsOffDone)}`);
         lines.push(`Freezer is on: ${doneText(freezerOnDone)}`);
-        lines.push(`Bin, Shelf & Freezer Ready: ${doneText(bsfDoneClosing)}`);
+        lines.push(`Freezers not working: ${doneText(freezersNotWorkingDone)}`);
         lines.push(`Trash Out: ${doneText(trashDoneClosing)}`);
+        lines.push(`Supplies Check: ${doneText(supDoneClosing)}`);
+        if(supDetailsClosing.length) lines.push(`- Issues: ${supDetailsClosing.join(", ")}`);
+        lines.push(``);
+
+        // Cash
+        lines.push(`Cash`);
+        lines.push(`Drawer Cash: ${drawer}`);
+        lines.push(`System Cash Sales: ${systemSales}`);
+        lines.push(`Difference: ${diffVal}`);
       }
 
       return lines.join("\n");
@@ -1606,7 +1796,7 @@
 
     // Helper functions for message building
     function getSegState(key, page) {
-      const activeBtn = document.querySelector(`#page${page.charAt(0).toUpperCase() + page.slice(1)} .segBtns[data-seg="${key}"] .segBtn.active`);
+      const activeBtn = document.querySelector(`#page${page} .segBtns[data-seg="${key}"] .segBtn.active`);
       return activeBtn ? activeBtn.dataset.val : "No";
     }
 
