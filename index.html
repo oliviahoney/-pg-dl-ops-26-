@@ -30,16 +30,9 @@
       --field:#0f0f0f;
     }
 
-    /* Hide parts initially */
-    .part2 { display: none; }
-    .part2.show { display: block; }
-    
-    /* Shift-specific sections */
-    .mid-section { display: none; }
-    .mid-section.show { display: block; }
-    
-    .closing-section { display: none; }
-    .closing-section.show { display: block; }
+    /* Page system */
+    .page { display: none; }
+    .page.active { display: block; }
 
     .expWrap{ margin-top:14px; }
     .expToggle{ display:flex; align-items:center; gap:10px; cursor:pointer; }
@@ -202,8 +195,8 @@
       .row2,.row3{grid-template-columns:1fr}
     }
 
-    /* Shift buttons */
-    .shiftWrap{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    /* Operation buttons */
+    .operationWrap{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
     .pill{
       border:1px solid rgba(255,255,255,.10);
       background:#101010;
@@ -272,21 +265,6 @@
 
     /* Delivery expiry */
     .hint{color:var(--muted); font-size:13px; margin: 6px 0 10px;}
-    .deliveryRow{
-      display:grid;
-      grid-template-columns: 140px 1fr 140px 1fr;
-      gap:10px;
-      align-items:end;
-      padding:10px 0;
-      border-bottom:1px solid rgba(255,255,255,.06);
-    }
-    .deliveryRow:last-child{border-bottom:none}
-    .deliveryLabel{
-      font-weight:800;
-      color:var(--text);
-      opacity:.92;
-      padding-top:8px;
-    }
 
     @media (max-width: 720px){
       .deliveryRow{
@@ -546,412 +524,451 @@
 </head>
 
 <body>
-  <header>
-    <div class="title">PG Daily Log</div>
-  </header>
+  <!-- Page 1: Operation Selection -->
+  <div id="page1" class="page active">
+    <header>
+      <div class="title">PG Daily Log</div>
+    </header>
 
-  <main>
-    <!-- Part 1: Store, Date, Name, Operation -->
-    <section class="card" id="part1">
-      <h2>Operation Details</h2>
+    <main>
+      <section class="card">
+        <h2>Operation Details</h2>
 
-      <div class="row2">
-        <div>
-          <label for="store">Store</label>
-          <select id="store">
-            <option value="490 Bergen St">490 Bergen St</option>
-            <option value="1562 1st Ave">1562 1st Ave</option>
-          </select>
+        <div class="row2">
+          <div>
+            <label for="store">Store</label>
+            <select id="store">
+              <option value="490 Bergen St">490 Bergen St</option>
+              <option value="1562 1st Ave">1562 1st Ave</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="date">Date</label>
+            <input id="date" type="text" class="date-input" readonly />
+          </div>
         </div>
 
-        <div>
-          <label for="date">Date</label>
-          <input id="date" type="text" class="date-input" readonly />
+        <div class="row2">
+          <div>
+            <label for="name">Name</label>
+            <input id="name" type="text" placeholder="Your name" autocomplete="off" />
+          </div>
+
+          <div>
+            <label>Operation</label>
+            <div class="operationWrap" role="group" aria-label="Operation">
+              <div class="pill" data-operation="opening">Opening (09:40–11:00)</div>
+              <div class="pill" data-operation="mid">12–5pm (12:00–17:00)</div>
+              <div class="pill" data-operation="closing">Closing (19:40–21:20)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="btnRow">
+          <button class="btn primary" type="button" id="btnContinue">Continue</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Page 2: Opening Operation -->
+  <div id="pageOpening" class="page">
+    <header>
+      <div class="title">PG Daily Log - Opening</div>
+      <div style="font-size: 13px; color: var(--muted); margin-top: 4px;" id="openingHeaderInfo"></div>
+    </header>
+
+    <main>
+      <!-- Focus SKUs -->
+      <section class="card" id="focusSKUs">
+        <h2>Focus SKUs (record only)</h2>
+
+        <div class="skuBlock">
+          <div class="skuTitle">SKU 1</div>
+          <div class="skuGrid">
+            <div>
+              <label for="fp1_reco">Recommend Times</label>
+              <input id="fp1_reco" type="number" inputmode="numeric" min="0" value="0" />
+            </div>
+
+            <div class="closedBox">
+              <label>Closed</label>
+              <div class="btns segBtns" data-seg="fp1_closed">
+                <div class="segBtn active" data-val="No">No</div>
+                <div class="segBtn" data-val="Yes">Yes</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="skuBlock">
+          <div class="skuTitle">SKU 2</div>
+          <div class="skuGrid">
+            <div>
+              <label for="fp2_reco">Recommend Times</label>
+              <input id="fp2_reco" type="number" inputmode="numeric" min="0" value="0" />
+            </div>
+
+            <div class="closedBox">
+              <label>Closed</label>
+              <div class="btns segBtns" data-seg="fp2_closed">
+                <div class="segBtn active" data-val="No">No</div>
+                <div class="segBtn" data-val="Yes">Yes</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="skuBlock">
+          <div class="skuTitle">SKU 3</div>
+          <div class="skuGrid">
+            <div>
+              <label for="fp3_reco">Recommend Times</label>
+              <input id="fp3_reco" type="number" inputmode="numeric" min="0" value="0" />
+            </div>
+
+            <div class="closedBox">
+              <label>Closed</label>
+              <div class="btns segBtns" data-seg="fp3_closed">
+                <div class="segBtn active" data-val="No">No</div>
+                <div class="segBtn" data-val="Yes">Yes</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Delivery expiry check -->
+      <div class="card expWrap">
+        <h2>Today's delivery expiry check</h2>
+        <div class="subline">Food, Topper, Treats, Supplement</div>
+
+        <label class="expToggle">
+          <input type="checkbox" id="exp_hasIssue">
+          <span>Found items with EXP ≤ 8 months</span>
+        </label>
+
+        <div id="exp_panel" class="expPanel">
+          <div class="expRow expHead" style="margin-top:10px;">
+            <div class="expHeadCell">SKU</div>
+            <div class="expHeadCell">EXP</div>
+          </div>
+
+          <div class="expRow">
+            <input class="expInput" id="exp_sku1" placeholder="" autocomplete="off">
+            <input class="expInput date-format" id="exp_exp1" placeholder="mm/dd/yyyy" autocomplete="off">
+          </div>
+
+          <div class="expRow">
+            <input class="expInput" id="exp_sku2" placeholder="" autocomplete="off">
+            <input class="expInput date-format" id="exp_exp2" placeholder="mm/dd/yyyy" autocomplete="off">
+          </div>
+
+          <div class="expRow">
+            <input class="expInput" id="exp_sku3" placeholder="" autocomplete="off">
+            <input class="expInput date-format" id="exp_exp3" placeholder="mm/dd/yyyy" autocomplete="off">
+          </div>
+
+          <div class="expRow">
+            <input class="expInput" id="exp_sku4" placeholder="" autocomplete="off">
+            <input class="expInput date-format" id="exp_exp4" placeholder="mm/dd/yyyy" autocomplete="off">
+          </div>
+
+          <div class="expRow">
+            <input class="expInput" id="exp_sku5" placeholder="" autocomplete="off">
+            <input class="expInput date-format" id="exp_exp5" placeholder="mm/dd/yyyy" autocomplete="off">
+          </div>
         </div>
       </div>
 
-      <div class="row2">
-        <div>
-          <label for="name">Name</label>
-          <input id="name" type="text" placeholder="Your name" autocomplete="off" />
-        </div>
+      <!-- Checklist -->
+      <section class="card">
+        <h2>Checklist</h2>
 
-        <div>
-          <label>Operation</label>
-          <div class="shiftWrap" role="group" aria-label="Operation">
-            <div class="pill" data-shift="opening">Opening (09:40–11:00)</div>
-            <div class="pill" data-shift="mid">12–5pm (12:00–17:00)</div>
-            <div class="pill" data-shift="closing">Closing (19:40–21:20)</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Part 2: Content that changes based on operation -->
-    <section class="part2" id="part2">
-      <!-- Opening Section -->
-      <div id="openingSection" class="opening-section">
-        <!-- Focus SKUs -->
-        <section class="card" id="focusSKUs">
-          <h2>Focus SKUs (record only)</h2>
-
-          <div class="skuBlock">
-            <div class="skuTitle">SKU 1</div>
-            <div class="skuGrid">
-              <div>
-                <label for="fp1_reco">Recommend Times</label>
-                <input id="fp1_reco" type="number" inputmode="numeric" min="0" value="0" />
+        <!-- Environment -->
+        <div class="checkItem">
+          <div class="checkHeader">
+            <input class="checkMain" type="checkbox" id="env_main" />
+            <div>
+              <div class="checkTitleRow">
+                <div class="checkTitle">Environment Normal</div>
               </div>
+              <div class="status" id="env_status">Not done</div>
 
-              <div class="closedBox">
-                <label>Closed</label>
-                <div class="btns segBtns" data-seg="fp1_closed">
-                  <div class="segBtn active" data-val="No">No</div>
-                  <div class="segBtn" data-val="Yes">Yes</div>
+              <div class="detailsBox">
+                <div class="detailsHead">Details (check if apply)</div>
+                <div class="detailsGrid" id="env_details">
+                  <label class="dRow"><input type="checkbox" data-detail="env" value="Music issue"><span>Music issue</span></label>
+                  <label class="dRow"><input type="checkbox" data-detail="env" value="Lights issue"><span>Lights issue</span></label>
+                  <label class="dRow"><input type="checkbox" data-detail="env" value="AC/Heat issue"><span>AC/Heat issue</span></label>
+                  <label class="dRow"><input type="checkbox" id="freezer_issue" data-detail="env" value="Freezer issue"><span>Freezer issue</span></label>
+                </div>
+                
+                <!-- Freezer issue sub-options -->
+                <div id="freezer_suboptions" class="subOptions" style="display: none;">
+                  <label class="dRow"><input type="radio" name="freezer_problem" value="door not sealed"><span>Door not sealed</span></label>
+                  <label class="dRow"><input type="radio" name="freezer_problem" value="temp abnormal"><span>Temp abnormal</span></label>
+                  <label class="dRow"><input type="radio" name="freezer_problem" value="totally down"><span>Totally down</span></label>
+                  <label class="dRow"><input type="radio" name="freezer_problem" value="other"><span>Other</span></label>
+                  <input type="text" id="freezer_other_text" class="otherInput" placeholder="Specify other issue" style="display: none;">
+                </div>
+
+                <div class="detailsGrid" style="margin-top:12px;">
+                  <label class="dRow">
+                    <input type="checkbox" id="label_missing_chk">
+                    <span>Label missing</span>
+                  </label>
+
+                  <input
+                    id="label_missing_text"
+                    type="text"
+                    placeholder="eg, FD duck head, poop bag, etc"
+                  />
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div class="skuBlock">
-            <div class="skuTitle">SKU 2</div>
-            <div class="skuGrid">
-              <div>
-                <label for="fp2_reco">Recommend Times</label>
-                <input id="fp2_reco" type="number" inputmode="numeric" min="0" value="0" />
-              </div>
-
-              <div class="closedBox">
-                <label>Closed</label>
-                <div class="btns segBtns" data-seg="fp2_closed">
-                  <div class="segBtn active" data-val="No">No</div>
-                  <div class="segBtn" data-val="Yes">Yes</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="skuBlock">
-            <div class="skuTitle">SKU 3</div>
-            <div class="skuGrid">
-              <div>
-                <label for="fp3_reco">Recommend Times</label>
-                <input id="fp3_reco" type="number" inputmode="numeric" min="0" value="0" />
-              </div>
-
-              <div class="closedBox">
-                <label>Closed</label>
-                <div class="btns segBtns" data-seg="fp3_closed">
-                  <div class="segBtn active" data-val="No">No</div>
-                  <div class="segBtn" data-val="Yes">Yes</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Delivery expiry check -->
-        <div class="card expWrap">
-          <h2>Today's delivery expiry check</h2>
-          <div class="subline">EXP mm/dd/yyyy</div>
-
-          <label class="expToggle">
-            <input type="checkbox" id="exp_hasIssue">
-            <span>Found items with EXP ≤ 8 months</span>
-          </label>
-
-          <div id="exp_panel" class="expPanel">
-            <div class="expRow expHead" style="margin-top:10px;">
-              <div class="expHeadCell">SKU</div>
-              <div class="expHeadCell">EXP</div>
-            </div>
-
-            <div class="expRow">
-              <input class="expInput" id="exp_sku1" placeholder="" autocomplete="off">
-              <input class="expInput date-format" id="exp_exp1" placeholder="mm/dd/yyyy" autocomplete="off">
-            </div>
-
-            <div class="expRow">
-              <input class="expInput" id="exp_sku2" placeholder="" autocomplete="off">
-              <input class="expInput date-format" id="exp_exp2" placeholder="mm/dd/yyyy" autocomplete="off">
-            </div>
-
-            <div class="expRow">
-              <input class="expInput" id="exp_sku3" placeholder="" autocomplete="off">
-              <input class="expInput date-format" id="exp_exp3" placeholder="mm/dd/yyyy" autocomplete="off">
-            </div>
-
-            <div class="expRow">
-              <input class="expInput" id="exp_sku4" placeholder="" autocomplete="off">
-              <input class="expInput date-format" id="exp_exp4" placeholder="mm/dd/yyyy" autocomplete="off">
-            </div>
-
-            <div class="expRow">
-              <input class="expInput" id="exp_sku5" placeholder="" autocomplete="off">
-              <input class="expInput date-format" id="exp_exp5" placeholder="mm/dd/yyyy" autocomplete="off">
             </div>
           </div>
         </div>
 
-        <!-- Checklist for Opening -->
-        <section class="card">
-          <h2>Checklist</h2>
+        <!-- System -->
+        <div class="checkItem">
+          <div class="checkHeader">
+            <input class="checkMain" type="checkbox" id="sys_main" />
+            <div>
+              <div class="checkTitleRow">
+                <div class="checkTitle">System Normal</div>
+              </div>
+              <div class="status" id="sys_status">Not done</div>
 
-          <!-- Environment -->
-          <div class="checkItem">
-            <div class="checkHeader">
-              <input class="checkMain" type="checkbox" id="env_main" />
-              <div>
-                <div class="checkTitleRow">
-                  <div class="checkTitle">Environment Normal</div>
-                </div>
-                <div class="status" id="env_status">Not done</div>
-
-                <div class="detailsBox">
-                  <div class="detailsHead">Details (check if apply)</div>
-                  <div class="detailsGrid" id="env_details">
-                    <label class="dRow"><input type="checkbox" data-detail="env" value="Music issue"><span>Music issue</span></label>
-                    <label class="dRow"><input type="checkbox" data-detail="env" value="Lights issue"><span>Lights issue</span></label>
-                    <label class="dRow"><input type="checkbox" data-detail="env" value="AC/Heat issue"><span>AC/Heat issue</span></label>
-                    <label class="dRow"><input type="checkbox" id="freezer_issue" data-detail="env" value="Freezer issue"><span>Freezer issue</span></label>
-                  </div>
-                  
-                  <!-- Freezer issue sub-options -->
-                  <div id="freezer_suboptions" class="subOptions" style="display: none;">
-                    <label class="dRow"><input type="radio" name="freezer_problem" value="door not sealed"><span>Door not sealed</span></label>
-                    <label class="dRow"><input type="radio" name="freezer_problem" value="temp abnormal"><span>Temp abnormal</span></label>
-                    <label class="dRow"><input type="radio" name="freezer_problem" value="totally down"><span>Totally down</span></label>
-                    <label class="dRow"><input type="radio" name="freezer_problem" value="other"><span>Other</span></label>
-                    <input type="text" id="freezer_other_text" class="otherInput" placeholder="Specify other issue" style="display: none;">
-                  </div>
-
-                  <div class="detailsGrid" style="margin-top:12px;">
-                    <label class="dRow">
-                      <input type="checkbox" id="label_missing_chk">
-                      <span>Label missing</span>
-                    </label>
-
-                    <input
-                      id="label_missing_text"
-                      type="text"
-                      placeholder="eg, FD duck head, poop bag, etc"
-                    />
-                  </div>
+              <div class="detailsBox">
+                <div class="detailsHead">Details (check if apply)</div>
+                <div class="detailsGrid" id="sys_details">
+                  <label class="dRow"><input type="checkbox" data-detail="sys" value="Phone issue"><span>Phone issue</span></label>
+                  <label class="dRow"><input type="checkbox" data-detail="sys" value="WiFi issue"><span>WiFi issue</span></label>
+                  <label class="dRow"><input type="checkbox" data-detail="sys" value="POS issue"><span>POS issue</span></label>
+                  <label class="dRow"><input type="checkbox" data-detail="sys" value="Printer issue"><span>Printer issue</span></label>
+                  <label class="dRow"><input type="checkbox" data-detail="sys" value="Receipt printer issue"><span>Receipt printer issue</span></label>
+                  <label class="dRow"><input type="checkbox" data-detail="sys" value="Barcode scanner issue"><span>Barcode scanner issue</span></label>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- System -->
-          <div class="checkItem">
-            <div class="checkHeader">
-              <input class="checkMain" type="checkbox" id="sys_main" />
-              <div>
-                <div class="checkTitleRow">
-                  <div class="checkTitle">System Normal</div>
-                </div>
-                <div class="status" id="sys_status">Not done</div>
+        <!-- Cleaning -->
+        <div class="checkItem">
+          <div class="checkHeader">
+            <input class="checkMain" type="checkbox" id="clean_main" />
+            <div>
+              <div class="checkTitleRow">
+                <div class="checkTitle">Cleaning Check</div>
+              </div>
+              <div class="status" id="clean_status">Not done</div>
 
-                <div class="detailsBox">
-                  <div class="detailsHead">Details (check if apply)</div>
-                  <div class="detailsGrid" id="sys_details">
-                    <label class="dRow"><input type="checkbox" data-detail="sys" value="Phone issue"><span>Phone issue</span></label>
-                    <label class="dRow"><input type="checkbox" data-detail="sys" value="WiFi issue"><span>WiFi issue</span></label>
-                    <label class="dRow"><input type="checkbox" data-detail="sys" value="POS issue"><span>POS issue</span></label>
-                    <label class="dRow"><input type="checkbox" data-detail="sys" value="Printer issue"><span>Printer issue</span></label>
-                    <label class="dRow"><input type="checkbox" data-detail="sys" value="Receipt printer issue"><span>Receipt printer issue</span></label>
-                    <label class="dRow"><input type="checkbox" data-detail="sys" value="Barcode scanner issue"><span>Barcode scanner issue</span></label>
-                  </div>
+              <div class="detailsBox">
+                <div class="cleaningReminder">
+                  Reminder: Check Window, Floor, Restroom cleanliness
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Cleaning -->
-          <div class="checkItem">
-            <div class="checkHeader">
-              <input class="checkMain" type="checkbox" id="clean_main" />
-              <div>
-                <div class="checkTitleRow">
-                  <div class="checkTitle">Cleaning Check</div>
-                </div>
-                <div class="status" id="clean_status">Not done</div>
+        <!-- Bin, Shelf & Freezer Ready -->
+        <div class="checkItem">
+          <div class="checkHeader">
+            <input class="checkMain" type="checkbox" id="bsf_main" />
+            <div>
+              <div class="checkTitleRow">
+                <div class="checkTitle">Bin, Shelf &amp; Freezer Ready</div>
+              </div>
+              <div class="status" id="bsf_status">Not done</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-                <div class="detailsBox">
-                  <div class="cleaningReminder">
-                    Reminder: Check Window, Floor, Restroom cleanliness
-                  </div>
-                </div>
+      <!-- Submit button -->
+      <section class="card">
+        <div class="btnRow">
+          <button class="btn secondary" type="button" id="btnBackOpening">Back</button>
+          <button class="btn primary" type="button" id="btnSendOpening">Submit &amp; Send (WhatsApp)</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Page 3: Mid Operation (12-5pm) -->
+  <div id="pageMid" class="page">
+    <header>
+      <div class="title">PG Daily Log - 12–5pm</div>
+      <div style="font-size: 13px; color: var(--muted); margin-top: 4px;" id="midHeaderInfo"></div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Checklist</h2>
+        
+        <div class="mid-checklist-item">
+          <input type="checkbox" id="mid_bin">
+          <div class="mid-checklist-label">Bin is re-organized</div>
+          <div class="mid-time" id="mid_bin_time"></div>
+        </div>
+        
+        <div class="mid-checklist-item">
+          <input type="checkbox" id="mid_shelf">
+          <div class="mid-checklist-label">Shelf is re-organized</div>
+          <div class="mid-time" id="mid_shelf_time"></div>
+        </div>
+        
+        <div class="mid-checklist-item">
+          <input type="checkbox" id="mid_freezer">
+          <div class="mid-checklist-label">Freezer is re-organized</div>
+          <div class="mid-time" id="mid_freezer_time"></div>
+        </div>
+        
+        <div class="mid-checklist-item">
+          <input type="checkbox" id="mid_floor">
+          <div class="mid-checklist-label">Floor is cleaned</div>
+          <div class="mid-time" id="mid_floor_time"></div>
+        </div>
+        
+        <div class="mid-checklist-item">
+          <input type="checkbox" id="mid_counter">
+          <div class="mid-checklist-label">Counter has no trash</div>
+          <div class="mid-time" id="mid_counter_time"></div>
+        </div>
+        
+        <div class="mid-checklist-item">
+          <input type="checkbox" id="mid_freezers_working">
+          <div class="mid-checklist-label">Freezers are working</div>
+          <div class="mid-time" id="mid_freezers_working_time"></div>
+        </div>
+      </section>
+
+      <!-- Submit button -->
+      <section class="card">
+        <div class="btnRow">
+          <button class="btn secondary" type="button" id="btnBackMid">Back</button>
+          <button class="btn primary" type="button" id="btnSendMid">Submit &amp; Send (WhatsApp)</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Page 4: Closing Operation -->
+  <div id="pageClosing" class="page">
+    <header>
+      <div class="title">PG Daily Log - Closing</div>
+      <div style="font-size: 13px; color: var(--muted); margin-top: 4px;" id="closingHeaderInfo"></div>
+    </header>
+
+    <main>
+      <!-- Focus SKUs for closing -->
+      <section class="card" id="focusSKUsClosing">
+        <h2>Focus SKUs (record only)</h2>
+
+        <div class="skuBlock">
+          <div class="skuTitle">SKU 1</div>
+          <div class="skuGrid">
+            <div>
+              <label for="fp1_reco_closing">Recommend Times</label>
+              <input id="fp1_reco_closing" type="number" inputmode="numeric" min="0" value="0" />
+            </div>
+
+            <div class="closedBox">
+              <label>Closed</label>
+              <div class="btns segBtns" data-seg="fp1_closed_closing">
+                <div class="segBtn active" data-val="No">No</div>
+                <div class="segBtn" data-val="Yes">Yes</div>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Bin, Shelf & Freezer Ready -->
-          <div class="checkItem">
-            <div class="checkHeader">
-              <input class="checkMain" type="checkbox" id="bsf_main" />
-              <div>
-                <div class="checkTitleRow">
-                  <div class="checkTitle">Bin, Shelf &amp; Freezer Ready</div>
-                </div>
-                <div class="status" id="bsf_status">Not done</div>
+        <div class="skuBlock">
+          <div class="skuTitle">SKU 2</div>
+          <div class="skuGrid">
+            <div>
+              <label for="fp2_reco_closing">Recommend Times</label>
+              <input id="fp2_reco_closing" type="number" inputmode="numeric" min="0" value="0" />
+            </div>
+
+            <div class="closedBox">
+              <label>Closed</label>
+              <div class="btns segBtns" data-seg="fp2_closed_closing">
+                <div class="segBtn active" data-val="No">No</div>
+                <div class="segBtn" data-val="Yes">Yes</div>
               </div>
             </div>
           </div>
-        </section>
-      </div> <!-- End Opening Section -->
+        </div>
 
-      <!-- Mid Section (12-5pm) -->
-      <div id="midSection" class="mid-section">
-        <section class="card">
-          <h2>Mid Shift Checklist</h2>
-          <div class="subline">Check items as completed (auto-timestamp)</div>
-          
-          <div class="mid-checklist-item">
-            <input type="checkbox" id="mid_bin">
-            <div class="mid-checklist-label">Bin is re-organized</div>
-            <div class="mid-time" id="mid_bin_time"></div>
-          </div>
-          
-          <div class="mid-checklist-item">
-            <input type="checkbox" id="mid_shelf">
-            <div class="mid-checklist-label">Shelf is re-organized</div>
-            <div class="mid-time" id="mid_shelf_time"></div>
-          </div>
-          
-          <div class="mid-checklist-item">
-            <input type="checkbox" id="mid_freezer">
-            <div class="mid-checklist-label">Freezer is re-organized</div>
-            <div class="mid-time" id="mid_freezer_time"></div>
-          </div>
-          
-          <div class="mid-checklist-item">
-            <input type="checkbox" id="mid_floor">
-            <div class="mid-checklist-label">Floor is cleaned</div>
-            <div class="mid-time" id="mid_floor_time"></div>
-          </div>
-          
-          <div class="mid-checklist-item">
-            <input type="checkbox" id="mid_counter">
-            <div class="mid-checklist-label">Counter has no trash</div>
-            <div class="mid-time" id="mid_counter_time"></div>
-          </div>
-          
-          <div class="mid-checklist-item">
-            <input type="checkbox" id="mid_freezers_working">
-            <div class="mid-checklist-label">Freezers are working</div>
-            <div class="mid-time" id="mid_freezers_working_time"></div>
-          </div>
-        </section>
-      </div> <!-- End Mid Section -->
+        <div class="skuBlock">
+          <div class="skuTitle">SKU 3</div>
+          <div class="skuGrid">
+            <div>
+              <label for="fp3_reco_closing">Recommend Times</label>
+              <input id="fp3_reco_closing" type="number" inputmode="numeric" min="0" value="0" />
+            </div>
 
-      <!-- Closing Section -->
-      <div id="closingSection" class="closing-section">
-        <!-- Focus SKUs for closing -->
-        <section class="card" id="focusSKUsClosing">
-          <h2>Focus SKUs (record only)</h2>
-
-          <div class="skuBlock">
-            <div class="skuTitle">SKU 1</div>
-            <div class="skuGrid">
-              <div>
-                <label for="fp1_reco_closing">Recommend Times</label>
-                <input id="fp1_reco_closing" type="number" inputmode="numeric" min="0" value="0" />
-              </div>
-
-              <div class="closedBox">
-                <label>Closed</label>
-                <div class="btns segBtns" data-seg="fp1_closed_closing">
-                  <div class="segBtn active" data-val="No">No</div>
-                  <div class="segBtn" data-val="Yes">Yes</div>
-                </div>
+            <div class="closedBox">
+              <label>Closed</label>
+              <div class="btns segBtns" data-seg="fp3_closed_closing">
+                <div class="segBtn active" data-val="No">No</div>
+                <div class="segBtn" data-val="Yes">Yes</div>
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          <div class="skuBlock">
-            <div class="skuTitle">SKU 2</div>
-            <div class="skuGrid">
-              <div>
-                <label for="fp2_reco_closing">Recommend Times</label>
-                <input id="fp2_reco_closing" type="number" inputmode="numeric" min="0" value="0" />
-              </div>
+      <!-- Checklist for Closing -->
+      <section class="card">
+        <h2>Checklist</h2>
 
-              <div class="closedBox">
-                <label>Closed</label>
-                <div class="btns segBtns" data-seg="fp2_closed_closing">
-                  <div class="segBtn active" data-val="No">No</div>
-                  <div class="segBtn" data-val="Yes">Yes</div>
-                </div>
+        <!-- Things OFF -->
+        <div class="checkItem">
+          <div class="checkHeader">
+            <input class="checkMain" type="checkbox" id="things_off_main" />
+            <div>
+              <div class="checkTitleRow">
+                <div class="checkTitle">Things OFF</div>
               </div>
+              <div class="status" id="things_off_status">Not done</div>
+              <div class="closing-reminder">Reminder: Music, Lights, AC/Heat, POS</div>
             </div>
           </div>
+        </div>
 
-          <div class="skuBlock">
-            <div class="skuTitle">SKU 3</div>
-            <div class="skuGrid">
-              <div>
-                <label for="fp3_reco_closing">Recommend Times</label>
-                <input id="fp3_reco_closing" type="number" inputmode="numeric" min="0" value="0" />
+        <!-- Freezer is on -->
+        <div class="checkItem">
+          <div class="checkHeader">
+            <input class="checkMain" type="checkbox" id="freezer_on_main" />
+            <div>
+              <div class="checkTitleRow">
+                <div class="checkTitle">Freezer is on</div>
               </div>
-
-              <div class="closedBox">
-                <label>Closed</label>
-                <div class="btns segBtns" data-seg="fp3_closed_closing">
-                  <div class="segBtn active" data-val="No">No</div>
-                  <div class="segBtn" data-val="Yes">Yes</div>
-                </div>
-              </div>
+              <div class="status" id="freezer_on_status">Not done</div>
             </div>
           </div>
-        </section>
+        </div>
 
-        <!-- Checklist for Closing -->
-        <section class="card">
-          <h2>Checklist</h2>
-
-          <!-- Things OFF -->
-          <div class="checkItem">
-            <div class="checkHeader">
-              <input class="checkMain" type="checkbox" id="things_off_main" />
-              <div>
-                <div class="checkTitleRow">
-                  <div class="checkTitle">Things OFF</div>
-                </div>
-                <div class="status" id="things_off_status">Not done</div>
-                <div class="closing-reminder">Reminder: Music, Lights, AC/Heat, POS</div>
+        <!-- Bin, Shelf & Freezer Ready -->
+        <div class="checkItem">
+          <div class="checkHeader">
+            <input class="checkMain" type="checkbox" id="bsf_main_closing" />
+            <div>
+              <div class="checkTitleRow">
+                <div class="checkTitle">Bin, Shelf &amp; Freezer Ready</div>
               </div>
+              <div class="status" id="bsf_status_closing">Not done</div>
             </div>
           </div>
+        </div>
 
-          <!-- Freezer is on -->
-          <div class="checkItem">
-            <div class="checkHeader">
-              <input class="checkMain" type="checkbox" id="freezer_on_main" />
-              <div>
-                <div class="checkTitleRow">
-                  <div class="checkTitle">Freezer is on</div>
-                </div>
-                <div class="status" id="freezer_on_status">Not done</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Bin, Shelf & Freezer Ready -->
-          <div class="checkItem">
-            <div class="checkHeader">
-              <input class="checkMain" type="checkbox" id="bsf_main_closing" />
-              <div>
-                <div class="checkTitleRow">
-                  <div class="checkTitle">Bin, Shelf &amp; Freezer Ready</div>
-                </div>
-                <div class="status" id="bsf_status_closing">Not done</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Trash Out (NO details) -->
+        <!-- Trash Out -->
         <div class="checkItem">
           <div class="checkHeader">
             <input class="checkMain" type="checkbox" id="trash_main_closing" />
@@ -963,71 +980,33 @@
             </div>
           </div>
         </div>
+      </section>
 
-        <!-- Supplies Check -->
-        <div class="checkItem">
-          <div class="checkHeader">
-            <input class="checkMain" type="checkbox" id="sup_main_closing" />
-            <div>
-              <div class="checkTitleRow">
-                <div class="checkTitle">Supplies Check</div>
-              </div>
-              <div class="status" id="sup_status_closing">Not done</div>
-
-              <div class="detailsBox">
-                <div class="detailsHead">Details (check if apply)</div>
-                <div class="detailsGrid" id="sup_details_closing">
-                  <label class="dRow"><input type="checkbox" data-detail="sup" value="Receipt paper ≤ 3 rolls"><span>Receipt paper ≤ 3 rolls</span></label>
-                  <label class="dRow"><input type="checkbox" data-detail="sup" value="Printer cartridge ≤ 15%"><span>Printer cartridge ≤ 15%</span></label>
-                  <label class="dRow"><input type="checkbox" data-detail="sup" value="Price label ≤ 1 roll"><span>Price label ≤ 1 roll</span></label>
-                  <label class="dRow"><input type="checkbox" data-detail="sup" value="Fabuloso need it next week"><span>Fabuloso need it next week</span></label>
-                  <label class="dRow"><input type="checkbox" data-detail="sup" value="Trash Bag = 1 roll"><span>Trash Bag = 1 roll</span></label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Cash -->
-        <section class="card">
-          <h2>Cash</h2>
-
-          <div class="cashGrid">
-            <div>
-              <label for="drawerCash">Drawer Cash ($)</label>
-              <input id="drawerCash" type="number" inputmode="decimal" placeholder="" />
-            </div>
-
-            <div>
-              <label for="systemCashSales">System Cash Sales ($)</label>
-              <input id="systemCashSales" type="number" inputmode="decimal" placeholder="" />
-            </div>
-          </div>
-
-          <div class="diffRow">
-            <div class="diffLabel">Difference</div>
-            <div class="diffValue" id="differenceValue">$0.00</div>
-          </div>
-        </section>
-      </div> <!-- End Closing Section -->
-
-      <!-- Submit button (shown for all sections) -->
+      <!-- Submit button -->
       <section class="card">
         <div class="btnRow">
-          <button class="btn secondary" type="button" id="btnBack">Back</button>
-          <button class="btn primary" type="button" id="btnSend">Submit &amp; Send (WhatsApp)</button>
+          <button class="btn secondary" type="button" id="btnBackClosing">Back</button>
+          <button class="btn primary" type="button" id="btnSendClosing">Submit &amp; Send (WhatsApp)</button>
         </div>
       </section>
-    </section> <!-- End Part 2 -->
-  </main>
+    </main>
+  </div>
 
   <script>
     // ---------------------------
-    // Helpers
+    // Constants and Helpers
     // ---------------------------
     const WA_PHONE = "12122894416";
     const LS_NAME_KEY = "pg_dl_name_v1";
-    const LS_SHIFT_KEY = "pg_dl_shift_v1";
+    const LS_STORE_KEY = "pg_dl_store_v1";
+    
+    // Store user data globally
+    let userData = {
+      store: "",
+      date: "",
+      name: "",
+      operation: ""
+    };
 
     function pad2(n){ return String(n).padStart(2,"0"); }
     
@@ -1072,348 +1051,438 @@
     }
 
     // ---------------------------
-    // Initialize page
+    // Page Navigation System
     // ---------------------------
-    const $date = document.getElementById("date");
-    const $name = document.getElementById("name");
-    const $store = document.getElementById("store");
-    const $part1 = document.getElementById("part1");
-    const $part2 = document.getElementById("part2");
-
-    // Set today's date in mm/dd/yyyy format
-    (function(){
-      const now = new Date();
-      $date.value = formatDateMMDDYYYY(now);
-    })();
-
-    // Load saved name
-    const savedName = localStorage.getItem(LS_NAME_KEY);
-    if(savedName) $name.value = savedName;
-
-    $name.addEventListener("input", () => {
-      localStorage.setItem(LS_NAME_KEY, $name.value.trim());
-    });
-
-    // ---------------------------
-    // Operation selection with scroll
-    // ---------------------------
-    const shiftButtons = Array.from(document.querySelectorAll(".pill[data-shift]"));
+    function showPage(pageId) {
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      
+      // Show the requested page
+      document.getElementById(pageId).classList.add('active');
+      
+      // Update header info if needed
+      updateHeaderInfo(pageId);
+    }
     
-    function setShift(s){
-      shiftButtons.forEach(b => b.classList.toggle("active", b.dataset.shift === s));
-      localStorage.setItem(LS_SHIFT_KEY, s || "");
+    function updateHeaderInfo(pageId) {
+      const headerInfoMap = {
+        'pageOpening': 'openingHeaderInfo',
+        'pageMid': 'midHeaderInfo',
+        'pageClosing': 'closingHeaderInfo'
+      };
       
-      // Show part 2 and hide part 1
-      $part2.classList.add("show");
-      
-      // Scroll to part 2
-      setTimeout(() => {
-        $part2.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
-      
-      // Show appropriate section based on shift
-      document.getElementById('openingSection').classList.remove('show');
-      document.getElementById('midSection').classList.remove('show');
-      document.getElementById('closingSection').classList.remove('show');
-      
-      if (s === 'opening') {
-        document.getElementById('openingSection').classList.add('show');
-      } else if (s === 'mid') {
-        document.getElementById('midSection').classList.add('show');
-      } else if (s === 'closing') {
-        document.getElementById('closingSection').classList.add('show');
+      const headerId = headerInfoMap[pageId];
+      if (headerId && userData.store && userData.date && userData.name) {
+        const headerElement = document.getElementById(headerId);
+        if (headerElement) {
+          headerElement.textContent = `${userData.store} • ${userData.date} • ${userData.name}`;
+        }
       }
     }
 
-    const savedShift = localStorage.getItem(LS_SHIFT_KEY) || "";
-    if(savedShift) {
-      setShift(savedShift);
-    }
-
-    shiftButtons.forEach(btn => {
-      btn.addEventListener("click", () => setShift(btn.dataset.shift));
-    });
-
-    // Back button (scroll to part 1)
-    document.getElementById("btnBack").addEventListener("click", () => {
-      $part1.scrollIntoView({top: 0, behavior: "smooth"});
-    });
-
     // ---------------------------
-    // Focus SKU segmented (Yes/No) for opening
+    // Initialize Page 1
     // ---------------------------
-    const segGroupsOpening = Array.from(document.querySelectorAll("#openingSection .segBtns[data-seg]"));
-    const segStateOpening = {
-      fp1_closed: "No",
-      fp2_closed: "No",
-      fp3_closed: "No"
-    };
+    function initializePage1() {
+      const $date = document.getElementById("date");
+      const $name = document.getElementById("name");
+      const $store = document.getElementById("store");
 
-    function setSegOpening(groupKey, val){
-      segStateOpening[groupKey] = val;
-      const wrap = document.querySelector(`#openingSection .segBtns[data-seg="${groupKey}"]`);
-      if(!wrap) return;
-      Array.from(wrap.querySelectorAll(".segBtn")).forEach(b => {
-        b.classList.toggle("active", b.dataset.val === val);
-      });
-    }
-
-    // Initialize all to "No"
-    segGroupsOpening.forEach(wrap => {
-      const key = wrap.dataset.seg;
-      setSegOpening(key, "No");
-      
-      wrap.addEventListener("click", (e) => {
-        const btn = e.target.closest(".segBtn");
-        if(!btn) return;
-        setSegOpening(key, btn.dataset.val);
-      });
-    });
-
-    // ---------------------------
-    // Focus SKU segmented (Yes/No) for closing
-    // ---------------------------
-    const segGroupsClosing = Array.from(document.querySelectorAll("#closingSection .segBtns[data-seg]"));
-    const segStateClosing = {
-      fp1_closed_closing: "No",
-      fp2_closed_closing: "No",
-      fp3_closed_closing: "No"
-    };
-
-    function setSegClosing(groupKey, val){
-      segStateClosing[groupKey] = val;
-      const wrap = document.querySelector(`#closingSection .segBtns[data-seg="${groupKey}"]`);
-      if(!wrap) return;
-      Array.from(wrap.querySelectorAll(".segBtn")).forEach(b => {
-        b.classList.toggle("active", b.dataset.val === val);
-      });
-    }
-
-    // Initialize all to "No"
-    segGroupsClosing.forEach(wrap => {
-      const key = wrap.dataset.seg;
-      setSegClosing(key, "No");
-      
-      wrap.addEventListener("click", (e) => {
-        const btn = e.target.closest(".segBtn");
-        if(!btn) return;
-        setSegClosing(key, btn.dataset.val);
-      });
-    });
-
-    // ---------------------------
-    // Checklist status text for opening
-    // ---------------------------
-    const mainChecksOpening = [
-      ["env_main", "env_status"],
-      ["sys_main", "sys_status"],
-      ["clean_main", "clean_status"],
-      ["bsf_main", "bsf_status"]
-    ];
-
-    function updateStatusOpening(mainId, statusId){
-      const main = document.getElementById(mainId);
-      const st = document.getElementById(statusId);
-      if(!main || !st) return;
-
-      if(main.checked){
+      // Set today's date in mm/dd/yyyy format
+      (function(){
         const now = new Date();
-        st.textContent = `Completed at ${formatTime(now)}`;
-        st.dataset.completedAt = now.toISOString();
-      }else{
-        st.textContent = "Not done";
-        delete st.dataset.completedAt;
+        $date.value = formatDateMMDDYYYY(now);
+        userData.date = $date.value;
+      })();
+
+      // Load saved name and store
+      const savedName = localStorage.getItem(LS_NAME_KEY);
+      const savedStore = localStorage.getItem(LS_STORE_KEY);
+      
+      if(savedName) {
+        $name.value = savedName;
+        userData.name = savedName;
       }
-    }
-
-    mainChecksOpening.forEach(([m,s]) => {
-      const el = document.getElementById(m);
-      if(!el) return;
-      el.addEventListener("change", () => updateStatusOpening(m,s));
-      updateStatusOpening(m,s);
-    });
-
-    // ---------------------------
-    // Checklist status text for closing
-    // ---------------------------
-    const mainChecksClosing = [
-      ["things_off_main", "things_off_status"],
-      ["freezer_on_main", "freezer_on_status"],
-      ["bsf_main_closing", "bsf_status_closing"],
-      ["trash_main_closing", "trash_status_closing"],
-      ["sup_main_closing", "sup_status_closing"]
-    ];
-
-    function updateStatusClosing(mainId, statusId){
-      const main = document.getElementById(mainId);
-      const st = document.getElementById(statusId);
-      if(!main || !st) return;
-
-      if(main.checked){
-        const now = new Date();
-        st.textContent = `Completed at ${formatTime(now)}`;
-        st.dataset.completedAt = now.toISOString();
-      }else{
-        st.textContent = "Not done";
-        delete st.dataset.completedAt;
+      
+      if(savedStore) {
+        $store.value = savedStore;
+        userData.store = savedStore;
       }
-    }
 
-    mainChecksClosing.forEach(([m,s]) => {
-      const el = document.getElementById(m);
-      if(!el) return;
-      el.addEventListener("change", () => updateStatusClosing(m,s));
-      updateStatusClosing(m,s);
-    });
+      $name.addEventListener("input", () => {
+        userData.name = $name.value.trim();
+        localStorage.setItem(LS_NAME_KEY, userData.name);
+      });
 
-    // ---------------------------
-    // Freezer issue sub-options
-    // ---------------------------
-    const freezerIssueCheck = document.getElementById("freezer_issue");
-    const freezerSubOptions = document.getElementById("freezer_suboptions");
-    const freezerOtherText = document.getElementById("freezer_other_text");
-    
-    freezerIssueCheck.addEventListener("change", function() {
-      freezerSubOptions.style.display = this.checked ? "block" : "none";
-      if (!this.checked) {
-        // Uncheck all freezer problem options
-        document.querySelectorAll('input[name="freezer_problem"]').forEach(radio => {
-          radio.checked = false;
+      $store.addEventListener("change", () => {
+        userData.store = $store.value;
+        localStorage.setItem(LS_STORE_KEY, userData.store);
+      });
+
+      // Operation buttons
+      const operationButtons = Array.from(document.querySelectorAll(".pill[data-operation]"));
+      
+      operationButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          operationButtons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          userData.operation = btn.dataset.operation;
         });
-        freezerOtherText.style.display = "none";
-        freezerOtherText.value = "";
+      });
+
+      // Continue button
+      document.getElementById("btnContinue").addEventListener("click", () => {
+        if (!userData.operation) {
+          alert("Please select an operation.");
+          return;
+        }
+        
+        if (!userData.name.trim()) {
+          alert("Please enter your name.");
+          document.getElementById("name").focus();
+          return;
+        }
+        
+        // Navigate to the appropriate page
+        if (userData.operation === "opening") {
+          showPage("pageOpening");
+        } else if (userData.operation === "mid") {
+          showPage("pageMid");
+        } else if (userData.operation === "closing") {
+          showPage("pageClosing");
+        }
+      });
+    }
+
+    // ---------------------------
+    // Page 2: Opening Operation
+    // ---------------------------
+    function initializeOpeningPage() {
+      // Back button
+      document.getElementById("btnBackOpening").addEventListener("click", () => {
+        showPage("page1");
+      });
+
+      // ---------------------------
+      // Focus SKU segmented (Yes/No) for opening
+      // ---------------------------
+      const segGroupsOpening = Array.from(document.querySelectorAll("#pageOpening .segBtns[data-seg]"));
+      const segStateOpening = {
+        fp1_closed: "No",
+        fp2_closed: "No",
+        fp3_closed: "No"
+      };
+
+      function setSegOpening(groupKey, val){
+        segStateOpening[groupKey] = val;
+        const wrap = document.querySelector(`#pageOpening .segBtns[data-seg="${groupKey}"]`);
+        if(!wrap) return;
+        Array.from(wrap.querySelectorAll(".segBtn")).forEach(b => {
+          b.classList.toggle("active", b.dataset.val === val);
+        });
       }
-    });
-    
-    // Show other text input when "other" is selected
-    document.querySelectorAll('input[name="freezer_problem"]').forEach(radio => {
-      radio.addEventListener("change", function() {
-        freezerOtherText.style.display = (this.value === "other") ? "block" : "none";
-        if (this.value !== "other") {
+
+      // Initialize all to "No"
+      segGroupsOpening.forEach(wrap => {
+        const key = wrap.dataset.seg;
+        setSegOpening(key, "No");
+        
+        wrap.addEventListener("click", (e) => {
+          const btn = e.target.closest(".segBtn");
+          if(!btn) return;
+          setSegOpening(key, btn.dataset.val);
+        });
+      });
+
+      // ---------------------------
+      // Checklist status text for opening
+      // ---------------------------
+      const mainChecksOpening = [
+        ["env_main", "env_status"],
+        ["sys_main", "sys_status"],
+        ["clean_main", "clean_status"],
+        ["bsf_main", "bsf_status"]
+      ];
+
+      function updateStatusOpening(mainId, statusId){
+        const main = document.getElementById(mainId);
+        const st = document.getElementById(statusId);
+        if(!main || !st) return;
+
+        if(main.checked){
+          const now = new Date();
+          st.textContent = `Completed at ${formatTime(now)}`;
+          st.dataset.completedAt = now.toISOString();
+        }else{
+          st.textContent = "Not done";
+          delete st.dataset.completedAt;
+        }
+      }
+
+      mainChecksOpening.forEach(([m,s]) => {
+        const el = document.getElementById(m);
+        if(!el) return;
+        el.addEventListener("change", () => updateStatusOpening(m,s));
+        updateStatusOpening(m,s);
+      });
+
+      // ---------------------------
+      // Freezer issue sub-options
+      // ---------------------------
+      const freezerIssueCheck = document.getElementById("freezer_issue");
+      const freezerSubOptions = document.getElementById("freezer_suboptions");
+      const freezerOtherText = document.getElementById("freezer_other_text");
+      
+      freezerIssueCheck.addEventListener("change", function() {
+        freezerSubOptions.style.display = this.checked ? "block" : "none";
+        if (!this.checked) {
+          // Uncheck all freezer problem options
+          document.querySelectorAll('input[name="freezer_problem"]').forEach(radio => {
+            radio.checked = false;
+          });
+          freezerOtherText.style.display = "none";
           freezerOtherText.value = "";
         }
       });
-    });
-
-    // ---------------------------
-    // Mid shift checklist with auto timestamp
-    // ---------------------------
-    const midCheckItems = [
-      {id: "mid_bin", timeId: "mid_bin_time", label: "Bin is re-organized"},
-      {id: "mid_shelf", timeId: "mid_shelf_time", label: "Shelf is re-organized"},
-      {id: "mid_freezer", timeId: "mid_freezer_time", label: "Freezer is re-organized"},
-      {id: "mid_floor", timeId: "mid_floor_time", label: "Floor is cleaned"},
-      {id: "mid_counter", timeId: "mid_counter_time", label: "Counter has no trash"},
-      {id: "mid_freezers_working", timeId: "mid_freezers_working_time", label: "Freezers are working"}
-    ];
-    
-    midCheckItems.forEach(item => {
-      const checkbox = document.getElementById(item.id);
-      const timeElement = document.getElementById(item.timeId);
       
-      checkbox.addEventListener("change", function() {
-        if (this.checked) {
-          timeElement.textContent = formatTime(new Date());
-        } else {
-          timeElement.textContent = "";
-        }
+      // Show other text input when "other" is selected
+      document.querySelectorAll('input[name="freezer_problem"]').forEach(radio => {
+        radio.addEventListener("change", function() {
+          freezerOtherText.style.display = (this.value === "other") ? "block" : "none";
+          if (this.value !== "other") {
+            freezerOtherText.value = "";
+          }
+        });
       });
-    });
 
-    // ---------------------------
-    // Delivery EXP toggle
-    // ---------------------------
-    const expChk = document.getElementById("exp_hasIssue");
-    const expPanel = document.getElementById("exp_panel");
+      // ---------------------------
+      // Delivery EXP toggle
+      // ---------------------------
+      const expChk = document.getElementById("exp_hasIssue");
+      const expPanel = document.getElementById("exp_panel");
 
-    function syncExpPanel(){
-      const on = expChk.checked;
-      expPanel.classList.toggle("show", on);
-    }
+      function syncExpPanel(){
+        const on = expChk.checked;
+        expPanel.classList.toggle("show", on);
+      }
 
-    expChk.addEventListener("change", syncExpPanel);
-    syncExpPanel(); // Initialize
+      expChk.addEventListener("change", syncExpPanel);
+      syncExpPanel(); // Initialize
 
-    // ---------------------------
-    // Date auto-format for EXP fields
-    // ---------------------------
-    document.querySelectorAll('.date-format').forEach(input => {
-      input.addEventListener('input', function() {
-        formatDateInput(this);
-      });
-      
-      input.addEventListener('keydown', function(e) {
-        // Allow navigation keys
-        if ([8, 9, 13, 37, 39].includes(e.keyCode)) return;
+      // ---------------------------
+      // Date auto-format for EXP fields
+      // ---------------------------
+      document.querySelectorAll('.date-format').forEach(input => {
+        input.addEventListener('input', function() {
+          formatDateInput(this);
+        });
         
-        // Only allow numbers
-        if (!/\d/.test(e.key) && e.keyCode !== 191) { // 191 is slash key
-          e.preventDefault();
-        }
+        input.addEventListener('keydown', function(e) {
+          // Allow navigation keys
+          if ([8, 9, 13, 37, 39].includes(e.keyCode)) return;
+          
+          // Only allow numbers
+          if (!/\d/.test(e.key) && e.keyCode !== 191) { // 191 is slash key
+            e.preventDefault();
+          }
+        });
       });
-    });
 
-    // ---------------------------
-    // Cash auto difference
-    // ---------------------------
-    const $drawer = document.getElementById("drawerCash");
-    const $system = document.getElementById("systemCashSales");
-    const $diff = document.getElementById("differenceValue");
+      // ---------------------------
+      // Send button for Opening
+      // ---------------------------
+      document.getElementById("btnSendOpening").addEventListener("click", () => {
+        // Label missing must be filled if checked
+        const labelMissingChk = document.getElementById("label_missing_chk");
+        const labelMissingText = document.getElementById("label_missing_text");
+        if(labelMissingChk.checked && !labelMissingText.value.trim()){
+          alert("Please fill in items for: Label missing.");
+          labelMissingText.focus();
+          return;
+        }
 
-    function updateDifference(){
-      const drawer = toNum($drawer.value);
-      const system = toNum($system.value);
-      const diff = drawer - system;
-      $diff.textContent = `$${diff.toFixed(2)}`;
-      $diff.dataset.value = diff.toFixed(2);
+        // EXP must be filled if checked
+        if(expChk.checked){
+          for(let i=1; i<=5; i++){
+            const sku = document.getElementById(`exp_sku${i}`);
+            const exp = document.getElementById(`exp_exp${i}`);
+            if(sku && sku.value.trim() && exp && !exp.value.trim()){
+              alert(`Please fill EXP for SKU ${i}.`);
+              exp.focus();
+              return;
+            }
+          }
+        }
+        
+        // Freezer issue must have a selection if checked
+        if (document.getElementById("freezer_issue").checked) {
+          const freezerProblem = document.querySelector('input[name="freezer_problem"]:checked');
+          if (!freezerProblem) {
+            alert("Please select a freezer issue type.");
+            return;
+          }
+          if (freezerProblem.value === "other" && !document.getElementById("freezer_other_text").value.trim()) {
+            alert("Please specify the other freezer issue.");
+            document.getElementById("freezer_other_text").focus();
+            return;
+          }
+        }
+
+        // Build and send message
+        sendWhatsAppMessage("opening");
+      });
     }
-    
-    $drawer.addEventListener("input", updateDifference);
-    $system.addEventListener("input", updateDifference);
-    updateDifference();
 
     // ---------------------------
-    // Build WhatsApp message
+    // Page 3: Mid Operation
     // ---------------------------
-    function getShiftLabel(){
-      const active = shiftButtons.find(b => b.classList.contains("active"));
-      if(!active) return "";
-      const s = active.dataset.shift;
-      if(s === "opening") return "Opening";
-      if(s === "mid") return "12–5pm";
-      if(s === "closing") return "Closing";
-      return "";
+    function initializeMidPage() {
+      // Back button
+      document.getElementById("btnBackMid").addEventListener("click", () => {
+        showPage("page1");
+      });
+
+      // ---------------------------
+      // Mid shift checklist with auto timestamp
+      // ---------------------------
+      const midCheckItems = [
+        {id: "mid_bin", timeId: "mid_bin_time", label: "Bin is re-organized"},
+        {id: "mid_shelf", timeId: "mid_shelf_time", label: "Shelf is re-organized"},
+        {id: "mid_freezer", timeId: "mid_freezer_time", label: "Freezer is re-organized"},
+        {id: "mid_floor", timeId: "mid_floor_time", label: "Floor is cleaned"},
+        {id: "mid_counter", timeId: "mid_counter_time", label: "Counter has no trash"},
+        {id: "mid_freezers_working", timeId: "mid_freezers_working_time", label: "Freezers are working"}
+      ];
+      
+      midCheckItems.forEach(item => {
+        const checkbox = document.getElementById(item.id);
+        const timeElement = document.getElementById(item.timeId);
+        
+        checkbox.addEventListener("change", function() {
+          if (this.checked) {
+            timeElement.textContent = formatTime(new Date());
+          } else {
+            timeElement.textContent = "";
+          }
+        });
+      });
+
+      // ---------------------------
+      // Send button for Mid
+      // ---------------------------
+      document.getElementById("btnSendMid").addEventListener("click", () => {
+        sendWhatsAppMessage("mid");
+      });
     }
 
-    function listCheckedDetails(detailKey, section = ''){
-      const selector = section ? `#${section} ` : '';
-      const nodes = Array.from(document.querySelectorAll(`${selector}input[type="checkbox"][data-detail="${detailKey}"]`));
-      const vals = nodes.filter(n => n.checked).map(n => n.value);
-      return vals;
+    // ---------------------------
+    // Page 4: Closing Operation
+    // ---------------------------
+    function initializeClosingPage() {
+      // Back button
+      document.getElementById("btnBackClosing").addEventListener("click", () => {
+        showPage("page1");
+      });
+
+      // ---------------------------
+      // Focus SKU segmented (Yes/No) for closing
+      // ---------------------------
+      const segGroupsClosing = Array.from(document.querySelectorAll("#pageClosing .segBtns[data-seg]"));
+      const segStateClosing = {
+        fp1_closed_closing: "No",
+        fp2_closed_closing: "No",
+        fp3_closed_closing: "No"
+      };
+
+      function setSegClosing(groupKey, val){
+        segStateClosing[groupKey] = val;
+        const wrap = document.querySelector(`#pageClosing .segBtns[data-seg="${groupKey}"]`);
+        if(!wrap) return;
+        Array.from(wrap.querySelectorAll(".segBtn")).forEach(b => {
+          b.classList.toggle("active", b.dataset.val === val);
+        });
+      }
+
+      // Initialize all to "No"
+      segGroupsClosing.forEach(wrap => {
+        const key = wrap.dataset.seg;
+        setSegClosing(key, "No");
+        
+        wrap.addEventListener("click", (e) => {
+          const btn = e.target.closest(".segBtn");
+          if(!btn) return;
+          setSegClosing(key, btn.dataset.val);
+        });
+      });
+
+      // ---------------------------
+      // Checklist status text for closing
+      // ---------------------------
+      const mainChecksClosing = [
+        ["things_off_main", "things_off_status"],
+        ["freezer_on_main", "freezer_on_status"],
+        ["bsf_main_closing", "bsf_status_closing"],
+        ["trash_main_closing", "trash_status_closing"]
+      ];
+
+      function updateStatusClosing(mainId, statusId){
+        const main = document.getElementById(mainId);
+        const st = document.getElementById(statusId);
+        if(!main || !st) return;
+
+        if(main.checked){
+          const now = new Date();
+          st.textContent = `Completed at ${formatTime(now)}`;
+          st.dataset.completedAt = now.toISOString();
+        }else{
+          st.textContent = "Not done";
+          delete st.dataset.completedAt;
+        }
+      }
+
+      mainChecksClosing.forEach(([m,s]) => {
+        const el = document.getElementById(m);
+        if(!el) return;
+        el.addEventListener("change", () => updateStatusClosing(m,s));
+        updateStatusClosing(m,s);
+      });
+
+      // ---------------------------
+      // Send button for Closing
+      // ---------------------------
+      document.getElementById("btnSendClosing").addEventListener("click", () => {
+        sendWhatsAppMessage("closing");
+      });
     }
 
-    function buildMessage(){
-      const store = $store.value || "";
-      const date = $date.value || "";
-      const name = ($name.value || "").trim();
-      const shift = getShiftLabel();
+    // ---------------------------
+    // WhatsApp Message Builder
+    // ---------------------------
+    function sendWhatsAppMessage(operationType) {
+      const msg = buildMessage(operationType);
+      const url = `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(msg)}`;
+      window.open(url, "_blank");
+    }
 
+    function buildMessage(operationType) {
       const lines = [];
 
       // Header
       lines.push(`PG Daily Log`);
-      lines.push(`Store: ${store}`);
-      lines.push(`Date: ${date}`);
-      lines.push(`Name: ${name}`);
-      lines.push(`Operation: ${shift}`);
+      lines.push(`Store: ${userData.store}`);
+      lines.push(`Date: ${userData.date}`);
+      lines.push(`Name: ${userData.name}`);
+      lines.push(`Operation: ${userData.operation === "opening" ? "Opening" : userData.operation === "mid" ? "12–5pm" : "Closing"}`);
       lines.push(``);
 
-      if (shift === "Opening") {
+      if (operationType === "opening") {
         // Focus SKUs for opening
         const fp = [
-          {sku:"SKU 1", reco: document.getElementById("fp1_reco").value ?? "0", closed: segStateOpening.fp1_closed},
-          {sku:"SKU 2", reco: document.getElementById("fp2_reco").value ?? "0", closed: segStateOpening.fp2_closed},
-          {sku:"SKU 3", reco: document.getElementById("fp3_reco").value ?? "0", closed: segStateOpening.fp3_closed},
+          {sku:"SKU 1", reco: document.getElementById("fp1_reco").value ?? "0", closed: getSegState("fp1_closed", "opening")},
+          {sku:"SKU 2", reco: document.getElementById("fp2_reco").value ?? "0", closed: getSegState("fp2_closed", "opening")},
+          {sku:"SKU 3", reco: document.getElementById("fp3_reco").value ?? "0", closed: getSegState("fp3_closed", "opening")},
         ];
 
         const expHasIssue = document.getElementById("exp_hasIssue").checked;
@@ -1423,8 +1492,8 @@
           exp: (document.getElementById(`exp_exp${i}`)?.value || "").trim()
         }));
 
-        const envDetails = listCheckedDetails("env");
-        const sysDetails = listCheckedDetails("sys");
+        const envDetails = listCheckedDetails("env", "pageOpening");
+        const sysDetails = listCheckedDetails("sys", "pageOpening");
 
         const envDone = document.getElementById("env_main").checked;
         const sysDone = document.getElementById("sys_main").checked;
@@ -1467,8 +1536,8 @@
           const freezerProblem = document.querySelector('input[name="freezer_problem"]:checked');
           if (freezerProblem) {
             let problemText = freezerProblem.value;
-            if (freezerProblem.value === "other" && freezerOtherText.value.trim()) {
-              problemText = `Other: ${freezerOtherText.value.trim()}`;
+            if (freezerProblem.value === "other" && document.getElementById("freezer_other_text").value.trim()) {
+              problemText = `Other: ${document.getElementById("freezer_other_text").value.trim()}`;
             }
             lines.push(`- Freezer issue: ${problemText}`);
           }
@@ -1483,34 +1552,36 @@
         lines.push(`Cleaning Check: ${doneText(cleanDone)}`);
         lines.push(`Bin, Shelf & Freezer Ready: ${doneText(bsfDone)}`);
 
-      } else if (shift === "12–5pm") {
+      } else if (operationType === "mid") {
         // Mid shift checklist
-        lines.push(`Mid Shift Checklist`);
-        midCheckItems.forEach(item => {
+        lines.push(`Checklist`);
+        const midItems = [
+          {id: "mid_bin", timeId: "mid_bin_time", label: "Bin is re-organized"},
+          {id: "mid_shelf", timeId: "mid_shelf_time", label: "Shelf is re-organized"},
+          {id: "mid_freezer", timeId: "mid_freezer_time", label: "Freezer is re-organized"},
+          {id: "mid_floor", timeId: "mid_floor_time", label: "Floor is cleaned"},
+          {id: "mid_counter", timeId: "mid_counter_time", label: "Counter has no trash"},
+          {id: "mid_freezers_working", timeId: "mid_freezers_working_time", label: "Freezers are working"}
+        ];
+        
+        midItems.forEach(item => {
           const checkbox = document.getElementById(item.id);
           const timeElement = document.getElementById(item.timeId);
           lines.push(`${item.label}: ${checkbox.checked ? `Done at ${timeElement.textContent}` : 'Not done'}`);
         });
         
-      } else if (shift === "Closing") {
+      } else if (operationType === "closing") {
         // Focus SKUs for closing
         const fpClosing = [
-          {sku:"SKU 1", reco: document.getElementById("fp1_reco_closing").value ?? "0", closed: segStateClosing.fp1_closed_closing},
-          {sku:"SKU 2", reco: document.getElementById("fp2_reco_closing").value ?? "0", closed: segStateClosing.fp2_closed_closing},
-          {sku:"SKU 3", reco: document.getElementById("fp3_reco_closing").value ?? "0", closed: segStateClosing.fp3_closed_closing},
+          {sku:"SKU 1", reco: document.getElementById("fp1_reco_closing").value ?? "0", closed: getSegState("fp1_closed_closing", "closing")},
+          {sku:"SKU 2", reco: document.getElementById("fp2_reco_closing").value ?? "0", closed: getSegState("fp2_closed_closing", "closing")},
+          {sku:"SKU 3", reco: document.getElementById("fp3_reco_closing").value ?? "0", closed: getSegState("fp3_closed_closing", "closing")},
         ];
 
         const thingsOffDone = document.getElementById("things_off_main").checked;
         const freezerOnDone = document.getElementById("freezer_on_main").checked;
         const bsfDoneClosing = document.getElementById("bsf_main_closing").checked;
         const trashDoneClosing = document.getElementById("trash_main_closing").checked;
-        const supDoneClosing = document.getElementById("sup_main_closing").checked;
-        
-        const supDetailsClosing = listCheckedDetails("sup", "closingSection");
-
-        const drawer = ($drawer.value || "").trim();
-        const systemSales = ($system.value || "").trim();
-        const diffVal = $diff.dataset.value ?? "";
 
         // Focus SKUs
         lines.push(`Focus SKUs`);
@@ -1528,79 +1599,34 @@
         lines.push(`Freezer is on: ${doneText(freezerOnDone)}`);
         lines.push(`Bin, Shelf & Freezer Ready: ${doneText(bsfDoneClosing)}`);
         lines.push(`Trash Out: ${doneText(trashDoneClosing)}`);
-        lines.push(`Supplies Check: ${doneText(supDoneClosing)}`);
-        if(supDetailsClosing.length) lines.push(`- Issues: ${supDetailsClosing.join(", ")}`);
-        lines.push(``);
-
-        // Cash
-        lines.push(`Cash`);
-        lines.push(`Drawer Cash: ${drawer}`);
-        lines.push(`System Cash Sales: ${systemSales}`);
-        lines.push(`Difference: ${diffVal}`);
       }
 
       return lines.join("\n");
     }
 
-    function openWhatsApp(){
-      const msg = buildMessage();
-      const url = `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(msg)}`;
-      window.open(url, "_blank");
+    // Helper functions for message building
+    function getSegState(key, page) {
+      const activeBtn = document.querySelector(`#page${page.charAt(0).toUpperCase() + page.slice(1)} .segBtns[data-seg="${key}"] .segBtn.active`);
+      return activeBtn ? activeBtn.dataset.val : "No";
     }
 
-    // Send button with validation
-    document.getElementById("btnSend").addEventListener("click", () => {
-      const shift = getShiftLabel();
-      
-      if (shift === "Opening") {
-        // Label missing must be filled if checked
-        const labelMissingChk = document.getElementById("label_missing_chk");
-        const labelMissingText = document.getElementById("label_missing_text");
-        if(labelMissingChk.checked && !labelMissingText.value.trim()){
-          alert("Please fill in items for: Label missing.");
-          labelMissingText.focus();
-          return;
-        }
+    function listCheckedDetails(detailKey, pageId){
+      const nodes = Array.from(document.querySelectorAll(`#${pageId} input[type="checkbox"][data-detail="${detailKey}"]`));
+      const vals = nodes.filter(n => n.checked).map(n => n.value);
+      return vals;
+    }
 
-        // EXP must be filled if checked
-        if(expChk.checked){
-          for(let i=1; i<=5; i++){
-            const sku = document.getElementById(`exp_sku${i}`);
-            const exp = document.getElementById(`exp_exp${i}`);
-            if(sku && sku.value.trim() && exp && !exp.value.trim()){
-              alert(`Please fill EXP for SKU ${i}.`);
-              exp.focus();
-              return;
-            }
-          }
-        }
-        
-        // Freezer issue must have a selection if checked
-        if (document.getElementById("freezer_issue").checked) {
-          const freezerProblem = document.querySelector('input[name="freezer_problem"]:checked');
-          if (!freezerProblem) {
-            alert("Please select a freezer issue type.");
-            return;
-          }
-          if (freezerProblem.value === "other" && !document.getElementById("freezer_other_text").value.trim()) {
-            alert("Please specify the other freezer issue.");
-            document.getElementById("freezer_other_text").focus();
-            return;
-          }
-        }
-      }
+    // ---------------------------
+    // Initialize All Pages
+    // ---------------------------
+    document.addEventListener('DOMContentLoaded', function() {
+      initializePage1();
+      initializeOpeningPage();
+      initializeMidPage();
+      initializeClosingPage();
       
-      if (shift === "Closing") {
-        // Cash fields should be filled
-        if (!$drawer.value.trim() || !$system.value.trim()) {
-          alert("Please fill in cash drawer and system cash sales.");
-          if (!$drawer.value.trim()) $drawer.focus();
-          else $system.focus();
-          return;
-        }
-      }
-
-      openWhatsApp();
+      // Initialize with page 1
+      showPage("page1");
     });
 
     // ---------------------------
