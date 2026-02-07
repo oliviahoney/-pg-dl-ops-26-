@@ -788,7 +788,7 @@
     // ---------------------------
     // Helpers
     // ---------------------------
-    const WA_PHONE = "12122894416"; // Olivia WhatsApp number, digits only
+    const WA_PHONE = "12122894416"; // Team WhatsApp number, digits only
     const LS_NAME_KEY = "pg_dl_name_v1";
     const LS_SHIFT_KEY = "pg_dl_shift_v1";
 
@@ -1114,7 +1114,31 @@ lines.push(``);
       window.scrollTo({top: 0, behavior: "smooth"});
     });
 
-    document.getElementById("btnSend").addEventListener("click", openWhatsApp);
+    document.getElementByIddocument.getElementById("btnSend").addEventListener("click", () => {
+
+  // Label missing must be filled if checked
+  if(labelMissingChk.checked && !labelMissingText.value.trim()){
+    alert("Please fill in items for: Label missing.");
+    labelMissingText.focus();
+    return;
+  }
+
+  // EXP must be filled if checked
+  if(expHasIssue){
+    for(let i=1;i<=5;i++){
+      const sku = document.getElementById(`exp_sku${i}`);
+      const exp = document.getElementById(`exp_exp${i}`);
+      if((sku && sku.value.trim()) && (!exp || !exp.value.trim())){
+        alert("Please fill EXP for all listed delivery items.");
+        exp.focus();
+        return;
+      }
+    }
+  }
+
+  openWhatsApp();
+});
+("btnSend").addEventListener("click", openWhatsApp);
 
     // ---------------------------
     // Service worker (optional)
