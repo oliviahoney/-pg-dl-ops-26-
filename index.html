@@ -1,632 +1,1030 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <!-- PWA -->
   <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#141414">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-  <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png">
+  <meta name="theme-color" content="#141414">
   <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PG Daily Log</title>
-<style>
-  body { font-family: -apple-system, system-ui, Arial; background:#0f0f0f; color:#fff; margin:0; }
-  header { position:sticky; top:0; background:#141414; padding:14px 16px; border-bottom:1px solid #222; }
-  header .t { font-weight:700; }
-  main { padding:16px; max-width:900px; margin:0 auto; }
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icons/icon-192.PNG">
 
-  .card { background:#141414; border:1px solid #222; border-radius:14px; padding:14px; margin-bottom:12px; }
-  label { display:block; margin-top:10px; font-size:13px; color:#bbb; }
+  <title>PG Daily Log</title>
 
-  /* IMPORTANT: do NOT apply width:100% to checkbox inputs */
-  input:not([type="checkbox"]), select {
-    width:100%;
-    padding:10px;
-    margin-top:6px;
-    border-radius:10px;
-    border:1px solid #2a2a2a;
-    background:#0f0f0f;
-    color:#fff;
-    box-sizing:border-box;
-  }
+  <style>
+    :root{
+      --bg:#0f0f0f;
+      --card:#141414;
+      --border:#2a2a2a;
+      --muted:#a8a8a8;
+      --text:#f2f2f2;
+      --accent:#ff5ca8;
+      --good:#22c55e;
+      --shadow: 0 12px 30px rgba(0,0,0,.35);
+      --radius:16px;
+      --radius2:14px;
+      --pad:16px;
+      --gap:12px;
+      --field:#0f0f0f;
+    }
 
-  .row { display:flex; gap:10px; flex-wrap:wrap; }
-  .col { flex:1; min-width:220px; }
-  .btns { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:linear-gradient(180deg,#0b0b0b 0%, #0f0f0f 40%, #0b0b0b 100%);
+      color:var(--text);
+      font-family:-apple-system, system-ui, Segoe UI, Roboto, Arial, sans-serif;
+    }
 
-  button { padding:12px 14px; border-radius:12px; border:1px solid #2a2a2a; background:#0f0f0f; color:#fff; cursor:pointer; }
-  button.primary { background:#25D366; border-color:#25D366; color:#000; font-weight:700; }
-  button.shift { background:#1b1b1b; }
-  button.shift.active { border-color:#25D366; box-shadow:0 0 0 1px #25D366 inset; }
-  button:disabled { cursor:not-allowed; }
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      padding:18px 16px 14px;
+      background:rgba(10,10,10,.82);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    header .title{
+      font-size:22px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
 
-  .sectionTitle { margin-top:6px; font-weight:700; }
-  .hint { font-size:12px; color:#9aa; margin-top:8px; line-height:1.4; }
-  .small { font-size:12px; color:#aaa; margin-top:8px; }
-  .divider { height:1px; background:#222; margin:14px 0; }
+    main{padding:16px; max-width: 860px; margin: 0 auto 28px;}
 
-  .skuBlock { padding:10px; border:1px solid #222; border-radius:12px; background:#101010; margin-top:10px; }
-  .skuHr { height:1px; background:#222; margin:12px 0; }
+    .card{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+      margin: 12px 0;
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size:20px;
+      font-weight:800;
+    }
+    .subline{
+      margin: 0 0 10px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .divider{
+      height:1px;
+      background:rgba(255,255,255,.07);
+      margin: 12px 0;
+    }
 
-  .item {
-    display:flex; gap:10px; align-items:flex-start;
-    padding:10px; border:1px solid #222; border-radius:12px;
-    margin-top:10px; background:#101010;
-  }
-  .item input[type="checkbox"] { width:auto; margin-top:2px; transform:scale(1.2); flex:0 0 auto; }
-  .meta { font-size:12px; color:#9aa; margin-top:4px; }
+    label{
+      display:block;
+      margin-top:10px;
+      font-size:13px;
+      color:var(--muted);
+    }
 
-  .subBox {
-    margin-top:8px;
-    padding:10px;
-    border:1px dashed #2a2a2a;
-    border-radius:12px;
-    background:#0f0f0f;
-  }
-  .subTitle { font-size:12px; color:#bbb; margin-bottom:6px; font-weight:600; }
-  .subItem { display:flex; gap:10px; align-items:center; margin-top:8px; }
-  .subItem input[type="checkbox"] { transform:scale(1.15); }
-  .subItem span { font-size:13px; color:#e6e6e6; }
-</style>
+    input:not([type="checkbox"]):not([type="radio"]), select, textarea{
+      width:100%;
+      margin-top:6px;
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:var(--field);
+      color:var(--text);
+      outline:none;
+    }
+    textarea{min-height:70px; resize:vertical}
+
+    .row2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items:end;
+    }
+    .row3{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      align-items:end;
+    }
+    @media (max-width: 560px){
+      .row2,.row3{grid-template-columns:1fr}
+    }
+
+    /* Shift buttons */
+    .shiftWrap{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .pill{
+      border:1px solid rgba(255,255,255,.10);
+      background:#101010;
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .pill.active{
+      border-color: rgba(255,92,168,.55);
+      box-shadow: 0 0 0 3px rgba(255,92,168,.12) inset;
+    }
+
+    /* Focus SKU */
+    .skuBlock{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;
+      padding:14px;
+      margin-top:12px;
+      background:rgba(0,0,0,.18);
+    }
+    .skuTitle{
+      font-size:18px;
+      font-weight:800;
+      margin:0 0 10px;
+    }
+    .focusGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      align-items:end;
+    }
+    @media (max-width: 560px){
+      .focusGrid{grid-template-columns:1fr}
+    }
+
+    .seg{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      margin-top:6px;
+    }
+    .seg label{margin:0; font-size:13px; color:var(--muted)}
+    .seg .segBtns{
+      display:flex;
+      gap:8px;
+    }
+    .segBtn{
+      border:1px solid rgba(255,255,255,.12);
+      background:#0f0f0f;
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-size:13px;
+      min-width:72px;
+      text-align:center;
+    }
+    .segBtn.active{
+      border-color: rgba(255,92,168,.55);
+      box-shadow: 0 0 0 3px rgba(255,92,168,.12) inset;
+    }
+
+    /* Delivery expiry */
+    .hint{color:var(--muted); font-size:13px; margin: 6px 0 10px;}
+    .deliveryRow{
+      display:grid;
+      grid-template-columns: 140px 1fr 140px 1fr;
+      gap:10px;
+      align-items:end;
+      padding:10px 0;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .deliveryRow:last-child{border-bottom:none}
+    .deliveryLabel{
+      font-weight:800;
+      color:var(--text);
+      opacity:.92;
+      padding-top:8px;
+    }
+    .expLabel{
+      color:var(--accent);
+      font-weight:800;
+      font-size:13px;
+      padding-top:8px;
+    }
+    @media (max-width: 720px){
+      .deliveryRow{
+        grid-template-columns: 110px 1fr;
+      }
+      .expLabel{padding-top:0}
+    }
+
+    /* Checklist */
+    .checkItem{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;
+      padding:14px;
+      margin-top:12px;
+      background:rgba(0,0,0,.18);
+    }
+
+    .checkHeader{
+      display:grid;
+      grid-template-columns: 28px 1fr;
+      gap:10px;
+      align-items:start;
+    }
+
+    .checkMain{
+      width:22px;
+      height:22px;
+      margin-top:2px;
+      accent-color: #3b82f6;
+    }
+
+    .checkTitleRow{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+    .checkTitle{
+      font-size:22px;
+      font-weight:900;
+      margin:0;
+      line-height:1.1;
+    }
+    .status{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:6px;
+    }
+
+    .detailsBox{
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      border:1px dashed rgba(255,255,255,.18);
+      background:rgba(0,0,0,.14);
+    }
+    .detailsHead{
+      color:var(--muted);
+      font-size:13px;
+      margin:0 0 10px;
+      font-weight:700;
+    }
+
+    .detailsGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    @media (max-width: 560px){
+      .detailsGrid{grid-template-columns:1fr}
+    }
+
+    .dRow{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.08);
+      background:#0f0f0f;
+    }
+    .dRow input[type="checkbox"]{
+      width:18px;
+      height:18px;
+      margin:0;
+      flex:0 0 auto;
+      accent-color:#e5e7eb;
+    }
+    .dRow span{
+      color:var(--text);
+      font-size:14px;
+      line-height:1.2;
+    }
+
+    .inlineBlock{
+      margin-top:10px;
+      display:grid;
+      grid-template-columns: 28px 1fr;
+      gap:10px;
+      align-items:center;
+    }
+    .inlineBlock input[type="checkbox"]{
+      width:18px; height:18px; margin:0;
+      accent-color:#e5e7eb;
+    }
+    .inlineBlock .inlineLabel{
+      font-size:14px;
+      color:var(--text);
+      font-weight:800;
+    }
+
+    .noteInput{
+      margin-top:8px;
+    }
+
+    /* Cash */
+    .cashGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      align-items:end;
+    }
+    @media (max-width: 560px){
+      .cashGrid{grid-template-columns:1fr}
+    }
+    .diffRow{
+      margin-top:12px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:#0f0f0f;
+    }
+    .diffLabel{
+      color:var(--muted);
+      font-size:13px;
+      font-weight:800;
+    }
+    .diffValue{
+      font-size:16px;
+      font-weight:900;
+      color:var(--accent);
+    }
+
+    /* Footer buttons */
+    .btnRow{
+      display:flex;
+      gap:10px;
+      margin-top:14px;
+    }
+    .btn{
+      flex:1;
+      border:none;
+      border-radius:14px;
+      padding:14px 14px;
+      font-weight:900;
+      font-size:16px;
+      cursor:pointer;
+    }
+    .btn.secondary{
+      background:#232323;
+      color:#fff;
+      border:1px solid rgba(255,255,255,.10);
+      flex: .7;
+    }
+    .btn.primary{
+      background:var(--good);
+      color:#041006;
+      box-shadow: 0 10px 22px rgba(34,197,94,.22);
+    }
+    .smallHelp{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:12.5px;
+      line-height:1.35;
+    }
+  </style>
 </head>
 
 <body>
-<header><div class="t">PG Daily Log</div></header>
+  <header>
+    <div class="title">PG Daily Log</div>
+  </header>
 
-<main>
-  <!-- Session -->
-  <div class="card" id="sessionCard">
-    <div class="row">
-      <div class="col">
-        <label>Store</label>
-        <select id="store">
-          <option value="490 Bergen St">490 Bergen St</option>
-          <option value="1562 1st Ave">1562 1st Ave</option>
-        </select>
+  <main>
+    <!-- Opening card -->
+    <section class="card" id="topCard">
+      <h2>Opening</h2>
+
+      <div class="row2">
+        <div>
+          <label for="store">Store</label>
+          <select id="store">
+            <option value="490 Bergen St">490 Bergen St</option>
+            <option value="1562 1st Ave">1562 1st Ave</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="date">Date</label>
+          <input id="date" type="date" />
+        </div>
       </div>
 
-      <div class="col">
-        <label>Date</label>
-        <input id="date" type="date">
-      </div>
+      <div class="row2">
+        <div>
+          <label for="name">Name</label>
+          <input id="name" type="text" placeholder="" autocomplete="off" />
+          <div class="smallHelp">Name is saved on this phone automatically.</div>
+        </div>
 
-      <div class="col">
-        <label>Name</label>
-        <div class="row" style="gap:8px; align-items:flex-end;">
-          <div class="col" style="min-width:0;">
-            <input id="empName" autocomplete="off">
-          </div>
-          <div style="min-width:120px;">
-            <button type="button" class="shift" onclick="clearSavedName()">Clear</button>
+        <div>
+          <label>Shift</label>
+          <div class="shiftWrap" role="group" aria-label="Shift">
+            <div class="pill" data-shift="opening">Opening (08:40–11:00)</div>
+            <div class="pill" data-shift="mid">12–5pm (12:00–17:00)</div>
+            <div class="pill" data-shift="closing">Closing (19:40–21:20)</div>
           </div>
         </div>
-        <div class="small">Name is saved on this phone automatically.</div>
       </div>
-    </div>
 
-    <label>Shift</label>
-    <div class="btns">
-      <button class="shift" data-shift="opening">Opening (08:40–11:00)</button>
-      <button class="shift" data-shift="mid">12–5pm (12:00–17:00)</button>
-      <button class="shift" data-shift="closing">Closing (19:40–21:20)</button>
-    </div>
-
-    <div class="hint">
-      Tap <b>Submit & Send</b> at the end of the shift. WhatsApp will open with the message pre-filled to Olivia.
-    </div>
-  </div>
-
-  <!-- Shift form -->
-  <div class="card" id="shiftCard" style="display:none;">
-    <div class="sectionTitle" id="shiftTitle">Shift</div>
-    <div class="small" id="shiftCtx"></div>
-
-    <div class="divider"></div>
+      <div class="smallHelp">
+        Tap <b>Submit &amp; Send</b> at the end of the shift. WhatsApp will open with the message pre-filled to Olivia.
+      </div>
+    </section>
 
     <!-- Focus SKUs -->
-    <div class="sectionTitle">Focus SKUs (record only)</div>
-    <div class="skuBlock">
-      <div class="sectionTitle">SKU 1</div>
-      <div class="row">
-        <div class="col">
-          <label>Recommend Times</label>
-          <input type="number" class="focusRec" value="0" min="0" inputmode="numeric">
-        </div>
-        <div class="col">
-          <label>Closed?</label>
-          <select class="focusClosed">
-            <option value="No" selected>No</option>
-            <option value="Yes">Yes</option>
-          </select>
-        </div>
-      </div>
+    <section class="card">
+      <h2>Focus SKUs (record only)</h2>
 
-      <div class="skuHr"></div>
+      <div class="skuBlock">
+        <div class="skuTitle">SKU 1</div>
+        <div class="focusGrid">
+          <div>
+            <label for="fp1_reco">Recommend Times</label>
+            <input id="fp1_reco" type="number" inputmode="numeric" min="0" value="0" />
+          </div>
 
-      <div class="sectionTitle">SKU 2</div>
-      <div class="row">
-        <div class="col">
-          <label>Recommend Times</label>
-          <input type="number" class="focusRec" value="0" min="0" inputmode="numeric">
-        </div>
-        <div class="col">
-          <label>Closed?</label>
-          <select class="focusClosed">
-            <option value="No" selected>No</option>
-            <option value="Yes">Yes</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="skuHr"></div>
-
-      <div class="sectionTitle">SKU 3</div>
-      <div class="row">
-        <div class="col">
-          <label>Recommend Times</label>
-          <input type="number" class="focusRec" value="0" min="0" inputmode="numeric">
-        </div>
-        <div class="col">
-          <label>Closed?</label>
-          <select class="focusClosed">
-            <option value="No" selected>No</option>
-            <option value="Yes">Yes</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <!-- Delivery expiry check -->
-    <div class="sectionTitle">Today's delivery expiry check (if &lt; 8 months)</div>
-    <div class="small">Food / Topper / Treats / Supplements — list SKUs below:</div>
-    <div class="row">
-      <div class="col"><label>SKU 1</label><input class="expSku"></div>
-      <div class="col"><label>SKU 2</label><input class="expSku"></div>
-    </div>
-    <div class="row">
-      <div class="col"><label>SKU 3</label><input class="expSku"></div>
-      <div class="col"><label>SKU 4</label><input class="expSku"></div>
-    </div>
-    <div class="row">
-      <div class="col"><label>SKU 5</label><input class="expSku"></div>
-    </div>
-
-    <div class="divider"></div>
-
-    <!-- Checklist -->
-    <div class="sectionTitle">Checklist</div>
-    <div id="checklist"></div>
-
-    <!-- Closing only cash -->
-    <div id="closingCash" style="display:none;">
-      <div class="divider"></div>
-      <div class="sectionTitle">Cash</div>
-      <label>Drawer Cash ($)</label>
-      <input id="drawerCash" type="number" inputmode="decimal">
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="btns">
-      <button onclick="back()" class="shift">Back</button>
-      <button onclick="submitAndSend()" class="primary" id="submitBtn">Submit & Send (WhatsApp)</button>
-    </div>
-
-    <div class="small" id="submitMeta"></div>
-  </div>
-</main>
-
-<script>
-  // WhatsApp recipient
-  const WHATSAPP_PHONE = "12122894416";
-  const $ = (id) => document.getElementById(id);
-
-  // Local-only storage (per employee phone)
-  const LS_NAME_KEY = "pgdl_name_v1";
-  const LS_STORE_KEY = "pgdl_store_v1";
-
-  function loadSavedBasics() {
-    try {
-      const savedName = localStorage.getItem(LS_NAME_KEY) || "";
-      const savedStore = localStorage.getItem(LS_STORE_KEY) || "";
-      if (savedName) $("empName").value = savedName;
-      if (savedStore) $("store").value = savedStore;
-    } catch (e) {}
-  }
-  function saveBasics() {
-    try {
-      const name = $("empName").value.trim();
-      const store = $("store").value;
-      if (name) localStorage.setItem(LS_NAME_KEY, name);
-      if (store) localStorage.setItem(LS_STORE_KEY, store);
-    } catch (e) {}
-  }
-  function clearSavedName() {
-    try { localStorage.removeItem(LS_NAME_KEY); } catch (e) {}
-    $("empName").value = "";
-    $("empName").focus();
-  }
-
-  // Time windows (device local time; expected America/New_York)
-  const SHIFT_WINDOWS = {
-    opening: { start: "08:40", end: "11:00" },
-    mid:     { start: "12:00", end: "17:00" },
-    closing: { start: "19:40", end: "21:20" }
-  };
-
-  function minutesSinceMidnight(d = new Date()) {
-    return d.getHours() * 60 + d.getMinutes();
-  }
-  function parseHHMM(hhmm) {
-    const [h, m] = hhmm.split(":").map(Number);
-    return h * 60 + m;
-  }
-  function isWithinWindow(shiftKey, d = new Date()) {
-    const w = SHIFT_WINDOWS[shiftKey];
-    if (!w) return true;
-    const now = minutesSinceMidnight(d);
-    const start = parseHHMM(w.start);
-    const end = parseHHMM(w.end);
-    return now >= start && now <= end;
-  }
-  function windowText(shiftKey) {
-    const w = SHIFT_WINDOWS[shiftKey];
-    if (!w) return "";
-    return `${w.start}–${w.end}`;
-  }
-  function setShiftButtonsEnabled() {
-    document.querySelectorAll('button.shift[data-shift]').forEach(btn => {
-      const key = btn.dataset.shift;
-      const ok = isWithinWindow(key);
-      btn.disabled = !ok;
-      btn.style.opacity = ok ? "1" : "0.35";
-    });
-  }
-
-  // Checklist definitions: main checkbox + sub-issues + optional note
-  const CHECKLISTS = {
-    opening: [
-      {
-        key: "environment",
-        label: "Environment Normal",
-        sub: ["Music issue", "Lights issue", "AC/Heat issue", "Other"],
-        noteKey: "label_missing",
-        noteLabel: "Label missing",
-        notePlaceholder: "eg, FD duck head, poop bag, etc"
-      },
-      {
-        key: "system",
-        label: "System Normal (Phone / Wifi / POS)",
-        sub: ["Phone issue", "Wifi issue", "POS issue", "Printer issue", "Other"]
-      },
-      {
-        key: "cleaning",
-        label: "Cleaning Normal (Window / Floor / Restroom)",
-        sub: ["Window not clean", "Floor not clean", "Restroom not clean", "Trash needs attention", "Other"]
-      },
-      {
-        key: "bins",
-        label: "Bin & Shelf Ready",
-        sub: ["Shelf messy", "Bin messy", "Restock needed", "Signage missing", "Other"]
-      },
-      {
-        key: "freezers",
-        label: "Freezers Normal",
-        sub: ["Temp issue", "Power issue", "Ice build-up", "Door not sealed", "Other"]
-      }
-    ],
-    mid: [
-      {
-        key: "environment",
-        label: "Environment Normal",
-        sub: ["Music issue", "Lights issue", "AC/Heat issue", "Other"],
-        noteKey: "label_missing",
-        noteLabel: "Label missing",
-        notePlaceholder: "eg, FD duck head, poop bag, etc"
-      },
-      {
-        key: "system",
-        label: "System Normal (Phone / Wifi / POS)",
-        sub: ["Phone issue", "Wifi issue", "POS issue", "Printer issue", "Other"]
-      },
-      {
-        key: "cleaning",
-        label: "Cleaning Normal (Window / Floor / Restroom)",
-        sub: ["Window not clean", "Floor not clean", "Restroom not clean", "Trash needs attention", "Other"]
-      },
-      {
-        key: "freezers",
-        label: "Freezers Normal",
-        sub: ["Temp issue", "Power issue", "Ice build-up", "Door not sealed", "Other"]
-      }
-    ],
-    closing: [
-      {
-        key: "environment",
-        label: "Environment Off (Music / Lights / AC / Heat)",
-        sub: ["Music still on", "Lights still on", "AC/Heat issue", "Other"]
-      },
-      {
-        key: "system",
-        label: "System Normal (Phone / Wifi / POS)",
-        sub: ["Phone issue", "Wifi issue", "POS issue", "Printer issue", "Other"]
-      },
-      {
-        key: "cleaning",
-        label: "Cleaning Normal (Window / Floor / Restroom)",
-        sub: ["Window not clean", "Floor not clean", "Restroom not clean", "Trash needs attention", "Other"]
-      },
-      {
-        key: "freezers",
-        label: "Freezers Normal",
-        sub: ["Temp issue", "Power issue", "Ice build-up", "Door not sealed", "Other"]
-      },
-      {
-        key: "trash",
-        label: "Trash Out",
-        sub: ["Trash not taken out", "Bins overflowing", "Other"]
-      },
-      {
-        key: "supplies",
-        label: "Supplies Check",
-        sub: [
-          "Receipt paper ≤ 3 rolls",
-          "Printer cartridge ≤ 15%",
-          "Price label ≤ 1 roll",
-          "Fabuloso need it next week"
-        ]
-      }
-    ]
-  };
-
-  // State
-  let state = { shift:null, items:[] };
-  // item: { key, label, checked, checkedAt, sub:[{label, checked}], noteKey?, noteLabel?, notePlaceholder?, note }
-
-  (function init() {
-    $("date").value = new Date().toISOString().slice(0,10);
-    loadSavedBasics();
-    setShiftButtonsEnabled();
-    setInterval(setShiftButtonsEnabled, 30 * 1000);
-  })();
-
-  document.querySelectorAll("button.shift[data-shift]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      // time gate: don't enter shift outside window
-      const key = btn.dataset.shift;
-      if (!isWithinWindow(key)) {
-        alert(`This shift can only be submitted during ${windowText(key)}.`);
-        return;
-      }
-
-      document.querySelectorAll("button.shift[data-shift]").forEach(b=>b.classList.remove("active"));
-      btn.classList.add("active");
-      openShift(key);
-    });
-  });
-
-  function openShift(shift) {
-    // time gate again
-    if (!isWithinWindow(shift)) {
-      alert(`This shift can only be submitted during ${windowText(shift)}.`);
-      return;
-    }
-
-    const name = $("empName").value.trim();
-    if (!name) { alert("Name required."); return; }
-    saveBasics();
-
-    state.shift = shift;
-    state.items = (CHECKLISTS[shift] || []).map(it => ({
-      key: it.key,
-      label: it.label,
-      checked: false,
-      checkedAt: null,
-      sub: (it.sub || []).map(s => ({ label: s, checked: false })),
-      noteKey: it.noteKey || null,
-      noteLabel: it.noteLabel || null,
-      notePlaceholder: it.notePlaceholder || "",
-      note: ""
-    }));
-
-    $("sessionCard").style.display = "none";
-    $("shiftCard").style.display = "block";
-
-    const store = $("store").value;
-    const date = $("date").value;
-
-    $("shiftTitle").textContent = shift === "opening" ? "Opening" : (shift === "mid" ? "12–5pm" : "Closing");
-    $("shiftCtx").textContent = `Store: ${store}  •  Date: ${date}  •  Name: ${name}`;
-
-    // Closing cash only
-    $("closingCash").style.display = (shift === "closing") ? "block" : "none";
-    if (shift !== "closing") $("drawerCash").value = "";
-
-    // reset per shift
-    document.querySelectorAll(".focusRec").forEach(i => i.value = "0");
-    document.querySelectorAll(".focusClosed").forEach(i => i.value = "No");
-    document.querySelectorAll(".expSku").forEach(i => i.value = "");
-
-    renderChecklist();
-    $("submitMeta").textContent = "";
-    updateSubmitButtonState();
-  }
-
-  function updateSubmitButtonState() {
-    const btn = $("submitBtn");
-    if (!state.shift) return;
-    const ok = isWithinWindow(state.shift);
-    btn.disabled = !ok;
-    btn.style.opacity = ok ? "1" : "0.35";
-    if (!ok) {
-      $("submitMeta").textContent = `Outside allowed time window (${windowText(state.shift)}).`;
-    }
-  }
-
-  function renderChecklist() {
-    const wrap = $("checklist");
-    wrap.innerHTML = "";
-
-    state.items.forEach((it, idx) => {
-      const mainId = `m_${idx}`;
-      const metaId = `meta_${idx}`;
-      const subWrapId = `sub_${idx}`;
-      const noteId = `note_${idx}`;
-
-      wrap.insertAdjacentHTML("beforeend", `
-        <div class="item">
-          <input type="checkbox" id="${mainId}">
-          <div style="flex:1">
-            <div>${escapeHtml(it.label)}</div>
-            <div class="meta" id="${metaId}">未完成</div>
-            <div class="subBox" id="${subWrapId}">
-              <div class="subTitle">Details (check if issue)</div>
+          <div>
+            <label>Closed</label>
+            <div class="seg">
+              <div class="segBtns" data-seg="fp1_closed">
+                <div class="segBtn active" data-val="No">No</div>
+                <div class="segBtn" data-val="Yes">Yes</div>
+              </div>
             </div>
           </div>
         </div>
-      `);
+      </div>
 
-      const subWrap = document.getElementById(subWrapId);
-
-      // sub issues
-      it.sub.forEach((s, sidx) => {
-        const sid = `s_${idx}_${sidx}`;
-        subWrap.insertAdjacentHTML("beforeend", `
-          <div class="subItem">
-            <input type="checkbox" id="${sid}">
-            <span>${escapeHtml(s.label)}</span>
+      <div class="skuBlock">
+        <div class="skuTitle">SKU 2</div>
+        <div class="focusGrid">
+          <div>
+            <label for="fp2_reco">Recommend Times</label>
+            <input id="fp2_reco" type="number" inputmode="numeric" min="0" value="0" />
           </div>
-        `);
-        document.getElementById(sid).addEventListener("change", (e) => {
-          s.checked = e.target.checked;
-        });
-      });
 
-      // note (Label missing)
-      if (it.noteKey) {
-        subWrap.insertAdjacentHTML("beforeend", `
-          <div style="margin-top:10px;">
-            <div class="subTitle">${escapeHtml(it.noteLabel)}</div>
-            <input id="${noteId}" placeholder="${escapeAttr(it.notePlaceholder)}">
+          <div>
+            <label>Closed</label>
+            <div class="seg">
+              <div class="segBtns" data-seg="fp2_closed">
+                <div class="segBtn active" data-val="No">No</div>
+                <div class="segBtn" data-val="Yes">Yes</div>
+              </div>
+            </div>
           </div>
-        `);
-        document.getElementById(noteId).addEventListener("input", (e) => {
-          it.note = e.target.value; // empty if user leaves blank
-        });
+        </div>
+      </div>
+
+      <div class="skuBlock">
+        <div class="skuTitle">SKU 3</div>
+        <div class="focusGrid">
+          <div>
+            <label for="fp3_reco">Recommend Times</label>
+            <input id="fp3_reco" type="number" inputmode="numeric" min="0" value="0" />
+          </div>
+
+          <div>
+            <label>Closed</label>
+            <div class="seg">
+              <div class="segBtns" data-seg="fp3_closed">
+                <div class="segBtn active" data-val="No">No</div>
+                <div class="segBtn" data-val="Yes">Yes</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Delivery expiry check -->
+    <section class="card">
+      <h2>Today's delivery expiry check (if &lt; 8 months)</h2>
+      <div class="hint">Food / Topper / Treats / Supplements — list SKUs and EXP below:</div>
+
+      <div class="deliveryRow">
+        <div class="deliveryLabel">SKU 1</div>
+        <div>
+          <input id="del_sku_1" type="text" placeholder="" />
+        </div>
+        <div class="expLabel">EXP</div>
+        <div>
+          <input id="del_exp_1" type="text" placeholder="" />
+        </div>
+      </div>
+
+      <div class="deliveryRow">
+        <div class="deliveryLabel">SKU 2</div>
+        <div>
+          <input id="del_sku_2" type="text" placeholder="" />
+        </div>
+        <div class="expLabel">EXP</div>
+        <div>
+          <input id="del_exp_2" type="text" placeholder="" />
+        </div>
+      </div>
+
+      <div class="deliveryRow">
+        <div class="deliveryLabel">SKU 3</div>
+        <div>
+          <input id="del_sku_3" type="text" placeholder="" />
+        </div>
+        <div class="expLabel">EXP</div>
+        <div>
+          <input id="del_exp_3" type="text" placeholder="" />
+        </div>
+      </div>
+
+      <div class="deliveryRow">
+        <div class="deliveryLabel">SKU 4</div>
+        <div>
+          <input id="del_sku_4" type="text" placeholder="" />
+        </div>
+        <div class="expLabel">EXP</div>
+        <div>
+          <input id="del_exp_4" type="text" placeholder="" />
+        </div>
+      </div>
+
+      <div class="deliveryRow">
+        <div class="deliveryLabel">SKU 5</div>
+        <div>
+          <input id="del_sku_5" type="text" placeholder="" />
+        </div>
+        <div class="expLabel">EXP</div>
+        <div>
+          <input id="del_exp_5" type="text" placeholder="" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Checklist -->
+    <section class="card">
+      <h2>Checklist</h2>
+
+      <!-- Environment -->
+      <div class="checkItem">
+        <div class="checkHeader">
+          <input class="checkMain" type="checkbox" id="env_main" />
+          <div>
+            <div class="checkTitleRow">
+              <div class="checkTitle">Environment Normal</div>
+            </div>
+            <div class="status" id="env_status">Not done</div>
+
+            <div class="detailsBox">
+              <div class="detailsHead">Details (check if issue)</div>
+              <div class="detailsGrid" id="env_details">
+                <label class="dRow"><input type="checkbox" data-detail="env" value="Music issue"><span>Music issue</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="env" value="Lights issue"><span>Lights issue</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="env" value="AC/Heat issue"><span>AC/Heat issue</span></label>
+              </div>
+
+              <div class="inlineBlock" style="margin-top:12px;">
+                <input type="checkbox" id="label_missing_chk" />
+                <div class="inlineLabel">Label missing</div>
+              </div>
+              <div class="noteInput">
+                <input id="label_missing_text" type="text" placeholder="eg, FD duck head, poop bag, etc" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- System -->
+      <div class="checkItem">
+        <div class="checkHeader">
+          <input class="checkMain" type="checkbox" id="sys_main" />
+          <div>
+            <div class="checkTitleRow">
+              <div class="checkTitle">System Normal</div>
+            </div>
+            <div class="status" id="sys_status">Not done</div>
+
+            <div class="detailsBox">
+              <div class="detailsHead">Details (check if issue)</div>
+              <div class="detailsGrid" id="sys_details">
+                <label class="dRow"><input type="checkbox" data-detail="sys" value="Phone issue"><span>Phone issue</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="sys" value="WiFi issue"><span>WiFi issue</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="sys" value="POS issue"><span>POS issue</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="sys" value="Printer issue"><span>Printer issue</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="sys" value="Receipt printer issue"><span>Receipt printer issue</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="sys" value="Barcode scanner issue"><span>Barcode scanner issue</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cleaning -->
+      <div class="checkItem">
+        <div class="checkHeader">
+          <input class="checkMain" type="checkbox" id="clean_main" />
+          <div>
+            <div class="checkTitleRow">
+              <div class="checkTitle">Cleaning Check</div>
+            </div>
+            <div class="status" id="clean_status">Not done</div>
+
+            <div class="detailsBox">
+              <div class="detailsHead">Details (check if issue)</div>
+              <div class="detailsGrid" id="clean_details">
+                <label class="dRow"><input type="checkbox" data-detail="clean" value="Window not clean"><span>Window not clean</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="clean" value="Floor not clean"><span>Floor not clean</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="clean" value="Restroom not clean"><span>Restroom not clean</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bin, Shelf & Freezer Ready -->
+      <div class="checkItem">
+        <div class="checkHeader">
+          <input class="checkMain" type="checkbox" id="bsf_main" />
+          <div>
+            <div class="checkTitleRow">
+              <div class="checkTitle">Bin, Shelf &amp; Freezer Ready</div>
+            </div>
+            <div class="status" id="bsf_status">Not done</div>
+
+            <div class="detailsBox">
+              <div class="detailsHead">Details (check if issue)</div>
+              <div class="detailsGrid" id="bsf_details">
+                <label class="dRow"><input type="checkbox" data-detail="bsf" value="Restock needed"><span>Restock needed</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Supplies Check -->
+      <div class="checkItem">
+        <div class="checkHeader">
+          <input class="checkMain" type="checkbox" id="sup_main" />
+          <div>
+            <div class="checkTitleRow">
+              <div class="checkTitle">Supplies Check</div>
+            </div>
+            <div class="status" id="sup_status">Not done</div>
+
+            <div class="detailsBox">
+              <div class="detailsHead">Details (check if issue)</div>
+              <div class="detailsGrid" id="sup_details">
+                <label class="dRow"><input type="checkbox" data-detail="sup" value="Receipt paper ≤ 3 rolls"><span>Receipt paper ≤ 3 rolls</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="sup" value="Printer cartridge ≤ 15%"><span>Printer cartridge ≤ 15%</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="sup" value="Price label ≤ 1 roll"><span>Price label ≤ 1 roll</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="sup" value="Fabuloso need it next week"><span>Fabuloso need it next week</span></label>
+                <label class="dRow"><input type="checkbox" data-detail="sup" value="Trash Bag = 1 roll"><span>Trash Bag = 1 roll</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trash Out (NO details) -->
+      <div class="checkItem">
+        <div class="checkHeader">
+          <input class="checkMain" type="checkbox" id="trash_main" />
+          <div>
+            <div class="checkTitleRow">
+              <div class="checkTitle">Trash Out</div>
+            </div>
+            <div class="status" id="trash_status">Not done</div>
+            <!-- no details box -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cash -->
+    <section class="card">
+      <h2>Cash</h2>
+
+      <div class="cashGrid">
+        <div>
+          <label for="drawerCash">Drawer Cash ($)</label>
+          <input id="drawerCash" type="number" inputmode="decimal" placeholder="" />
+        </div>
+
+        <div>
+          <label for="systemCashSales">System Cash Sales ($)</label>
+          <input id="systemCashSales" type="number" inputmode="decimal" placeholder="" />
+        </div>
+      </div>
+
+      <div class="diffRow">
+        <div class="diffLabel">Difference (Drawer - System)</div>
+        <div class="diffValue" id="differenceValue">$0.00</div>
+      </div>
+
+      <div class="btnRow">
+        <button class="btn secondary" type="button" id="btnBack">Back</button>
+        <button class="btn primary" type="button" id="btnSend">Submit &amp; Send (WhatsApp)</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ---------------------------
+    // Helpers
+    // ---------------------------
+    const WA_PHONE = "12122894416"; // Olivia WhatsApp number, digits only
+    const LS_NAME_KEY = "pg_dl_name_v1";
+    const LS_SHIFT_KEY = "pg_dl_shift_v1";
+
+    function pad2(n){ return String(n).padStart(2,"0"); }
+    function formatTime(d){
+      try{
+        const h = d.getHours();
+        const m = d.getMinutes();
+        const ampm = h >= 12 ? "PM" : "AM";
+        const hh = h % 12 || 12;
+        return `${hh}:${pad2(m)} ${ampm}`;
+      }catch(e){
+        return "";
       }
+    }
+    function escapeText(s){
+      return (s ?? "").toString()
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+    }
+    function toNum(v){
+      const n = parseFloat(v);
+      return Number.isFinite(n) ? n : 0;
+    }
 
-      // main checkbox timestamp
-      const mainCb = document.getElementById(mainId);
-      mainCb.addEventListener("change", () => {
-        it.checked = mainCb.checked;
-        it.checkedAt = it.checked ? new Date().toISOString() : null;
-        document.getElementById(metaId).textContent = it.checkedAt ? ("已完成 " + formatTime(it.checkedAt)) : "未完成";
+    // ---------------------------
+    // Init date + name persistence
+    // ---------------------------
+    const $date = document.getElementById("date");
+    const $name = document.getElementById("name");
+    const $store = document.getElementById("store");
+
+    // default date = today (local)
+    (function(){
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = pad2(now.getMonth()+1);
+      const dd = pad2(now.getDate());
+      $date.value = `${yyyy}-${mm}-${dd}`;
+    })();
+
+    // load saved name
+    const savedName = localStorage.getItem(LS_NAME_KEY);
+    if(savedName) $name.value = savedName;
+
+    $name.addEventListener("input", () => {
+      localStorage.setItem(LS_NAME_KEY, $name.value.trim());
+    });
+
+    // ---------------------------
+    // Shift selection
+    // ---------------------------
+    const shiftButtons = Array.from(document.querySelectorAll(".pill[data-shift]"));
+    function setShift(s){
+      shiftButtons.forEach(b => b.classList.toggle("active", b.dataset.shift === s));
+      localStorage.setItem(LS_SHIFT_KEY, s || "");
+    }
+    const savedShift = localStorage.getItem(LS_SHIFT_KEY) || "";
+    if(savedShift) setShift(savedShift);
+
+    shiftButtons.forEach(btn => {
+      btn.addEventListener("click", () => setShift(btn.dataset.shift));
+    });
+
+    // ---------------------------
+    // Focus SKU segmented (Yes/No)
+    // ---------------------------
+    const segGroups = Array.from(document.querySelectorAll(".segBtns[data-seg]"));
+    const segState = {
+      fp1_closed: "No",
+      fp2_closed: "No",
+      fp3_closed: "No"
+    };
+
+    function setSeg(groupKey, val){
+      segState[groupKey] = val;
+      const wrap = document.querySelector(`.segBtns[data-seg="${groupKey}"]`);
+      if(!wrap) return;
+      Array.from(wrap.querySelectorAll(".segBtn")).forEach(b => {
+        b.classList.toggle("active", b.dataset.val === val);
+      });
+    }
+    segGroups.forEach(wrap => {
+      const key = wrap.dataset.seg;
+      // init default "No"
+      setSeg(key, "No");
+      wrap.addEventListener("click", (e) => {
+        const btn = e.target.closest(".segBtn");
+        if(!btn) return;
+        setSeg(key, btn.dataset.val);
       });
     });
-  }
 
-  function submitAndSend() {
-    // final time gate at submission time
-    if (!state.shift || !isWithinWindow(state.shift)) {
-      alert(`You can only submit during ${windowText(state.shift)}.`);
-      updateSubmitButtonState();
-      return;
-    }
+    // ---------------------------
+    // Checklist status text (English only)
+    // ---------------------------
+    const mainChecks = [
+      ["env_main", "env_status"],
+      ["sys_main", "sys_status"],
+      ["clean_main", "clean_status"],
+      ["bsf_main", "bsf_status"],
+      ["sup_main", "sup_status"],
+      ["trash_main", "trash_status"]
+    ];
 
-    const store = $("store").value;
-    const date = $("date").value;
-    const name = $("empName").value.trim();
-    const shift = state.shift;
-    if (!name || !shift) { alert("Missing name or shift."); return; }
+    function updateStatus(mainId, statusId){
+      const main = document.getElementById(mainId);
+      const st = document.getElementById(statusId);
+      if(!main || !st) return;
 
-    const now = new Date();
-    const submittedAtISO = now.toISOString();
-    const submittedTime = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-
-    const focusRecs = Array.from(document.querySelectorAll(".focusRec")).map(i => i.value.trim());
-    const focusClosed = Array.from(document.querySelectorAll(".focusClosed")).map(i => i.value || "No");
-    const expSkus = Array.from(document.querySelectorAll(".expSku")).map(i => i.value.trim()).filter(Boolean);
-    const drawerCash = (shift === "closing") ? $("drawerCash").value.trim() : "";
-
-    let msg = `PGLOG | ${store} | ${shiftLabel(shift)} | ${name} | ${date} | ${submittedTime}\n\n`;
-
-    msg += `Focus SKUs\n`;
-    for (let i=0; i<3; i++) {
-      const rec = (focusRecs[i] ?? "0").toString();
-      const closed = focusClosed[i] || "No";
-      msg += `- SKU ${i+1} | Recommend: ${rec} | Closed: ${closed}\n`;
-    }
-    msg += `\n`;
-
-    msg += `Delivery expiry check (<8 months)\n`;
-    expSkus.forEach((s, i) => { msg += `- SKU ${i+1}: ${s}\n`; });
-    msg += `\n`;
-
-    msg += `Checklist\n`;
-    state.items.forEach(it => {
-      const mark = it.checked ? "✓" : " ";
-      msg += `[${mark}] ${it.label}\n`;
-
-      // sub issues (only if checked)
-      const issues = (it.sub || []).filter(s => s.checked).map(s => s.label);
-      issues.forEach(s => { msg += `  - ${s}\n`; });
-
-      // ALWAYS include Label missing line where applicable (even empty)
-      if (it.noteKey === "label_missing") {
-        msg += `  Label missing: ${ (it.note || "").trim() }\n`;
+      if(main.checked){
+        const now = new Date();
+        st.textContent = `Completed at ${formatTime(now)}`;
+        st.dataset.completedAt = now.toISOString();
+      }else{
+        st.textContent = "Not done";
+        delete st.dataset.completedAt;
       }
+    }
+
+    mainChecks.forEach(([m,s]) => {
+      const el = document.getElementById(m);
+      if(!el) return;
+      el.addEventListener("change", () => updateStatus(m,s));
+      updateStatus(m,s);
     });
 
-    if (shift === "closing") {
-      msg += `\nCash\n`;
-      msg += `- Drawer Cash: $${drawerCash}\n`;
+    // Label missing checkbox + input (keep placeholder in UI, but WhatsApp should show blank if empty)
+    const labelMissingChk = document.getElementById("label_missing_chk");
+    const labelMissingText = document.getElementById("label_missing_text");
+    labelMissingChk.addEventListener("change", () => {
+      // If unchecked, do not clear text (you wanted accountability); keep text as is.
+      // If they typed but didn't check, you will see that mismatch.
+    });
+
+    // ---------------------------
+    // Cash auto difference
+    // ---------------------------
+    const $drawer = document.getElementById("drawerCash");
+    const $system = document.getElementById("systemCashSales");
+    const $diff = document.getElementById("differenceValue");
+
+    function updateDifference(){
+      const drawer = toNum($drawer.value);
+      const system = toNum($system.value);
+      const diff = drawer - system;
+      $diff.textContent = `$${diff.toFixed(2)}`;
+      $diff.dataset.value = diff.toFixed(2);
+    }
+    $drawer.addEventListener("input", updateDifference);
+    $system.addEventListener("input", updateDifference);
+    updateDifference();
+
+    // ---------------------------
+    // Build WhatsApp message
+    // (No "blank" anywhere; empty stays empty)
+    // ---------------------------
+    function getShiftLabel(){
+      const active = shiftButtons.find(b => b.classList.contains("active"));
+      if(!active) return "";
+      const s = active.dataset.shift;
+      if(s === "opening") return "Opening";
+      if(s === "mid") return "12–5pm";
+      if(s === "closing") return "Closing";
+      return "";
     }
 
-    msg += `\nSubmitted: ${submittedAtISO}\n`;
+    function listCheckedDetails(detailKey){
+      const nodes = Array.from(document.querySelectorAll(`input[type="checkbox"][data-detail="${detailKey}"]`));
+      const vals = nodes.filter(n => n.checked).map(n => n.value);
+      return vals;
+    }
 
-    const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(msg)}`;
-    $("submitMeta").textContent = "Opening WhatsApp…";
-    location.href = url;
-  }
+    function buildMessage(){
+      const store = $store.value || "";
+      const date = $date.value || "";
+      const name = ($name.value || "").trim();
+      const shift = getShiftLabel();
 
-  function back() {
-    $("shiftCard").style.display = "none";
-    $("sessionCard").style.display = "block";
-    state = { shift:null, items:[] };
-    document.querySelectorAll("button.shift[data-shift]").forEach(b=>b.classList.remove("active"));
-    setShiftButtonsEnabled();
-  }
+      const fp = [
+        {sku:"SKU 1", reco: document.getElementById("fp1_reco").value ?? "0", closed: segState.fp1_closed},
+        {sku:"SKU 2", reco: document.getElementById("fp2_reco").value ?? "0", closed: segState.fp2_closed},
+        {sku:"SKU 3", reco: document.getElementById("fp3_reco").value ?? "0", closed: segState.fp3_closed},
+      ];
 
-  function shiftLabel(s){
-    if (s === "opening") return "Opening";
-    if (s === "mid") return "12–5pm";
-    return "Closing";
-  }
+      const delivery = [1,2,3,4,5].map(i => ({
+        sku: (document.getElementById(`del_sku_${i}`).value || "").trim(),
+        exp: (document.getElementById(`del_exp_${i}`).value || "").trim()
+      }));
 
-  function formatTime(iso){
-    try {
-      const d = new Date(iso);
-      return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-    } catch { return iso; }
-  }
+      const envDetails = listCheckedDetails("env");
+      const sysDetails = listCheckedDetails("sys");
+      const cleanDetails = listCheckedDetails("clean");
+      const bsfDetails = listCheckedDetails("bsf");
+      const supDetails = listCheckedDetails("sup");
 
-  function escapeHtml(str){
-    return (str || "").replace(/[&<>"']/g, m => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[m]));
-  }
-  function escapeAttr(str){
-    return (str || "").replace(/"/g, "&quot;");
-  }
-  if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(() => {});
-  });
-}
-</script>
+      const envDone = document.getElementById("env_main").checked;
+      const sysDone = document.getElementById("sys_main").checked;
+      const cleanDone = document.getElementById("clean_main").checked;
+      const bsfDone = document.getElementById("bsf_main").checked;
+      const supDone = document.getElementById("sup_main").checked;
+      const trashDone = document.getElementById("trash_main").checked;
 
+      const labelMissingChecked = labelMissingChk.checked;
+      const labelMissingVal = (labelMissingText.value || "").trim(); // if empty -> empty
+
+      const drawer = ($drawer.value || "").trim();
+      const systemSales = ($system.value || "").trim();
+      const diffVal = $diff.dataset.value ?? "";
+
+      const lines = [];
+
+      // Header
+      lines.push(`PG Daily Log`);
+      lines.push(`Store: ${store}`);
+      lines.push(`Date: ${date}`);
+      lines.push(`Name: ${name}`);
+      lines.push(`Shift: ${shift}`);
+      lines.push(``);
+
+      // Focus SKUs
+      lines.push(`Focus SKUs`);
+      fp.forEach(x => {
+        const reco = (x.reco === "" ? "0" : x.reco);
+        lines.push(`${x.sku} — Recommend: ${reco} | Closed: ${x.closed}`);
+      });
+      lines.push(``);
+
+      // Delivery
+      lines.push(`Delivery Expiry Check (if < 8 months)`);
+      delivery.forEach((d, idx) => {
+        const skuLabel = `SKU ${idx+1}`;
+        lines.push(`${skuLabel}: ${d.sku} | EXP: ${d.exp}`);
+      });
+      lines.push(``);
+
+      // Checklist summary
+      function doneText(b){ return b ? "Done" : "Not done"; }
+
+      lines.push(`Checklist`);
+      lines.push(`Environment Normal: ${doneText(envDone)}`);
+      if(envDetails.length) lines.push(`- Issues: ${envDetails.join(", ")}`);
+      // Label missing line must appear in WhatsApp always
+      lines.push(`- Label missing checked: ${labelMissingChecked ? "Yes" : "No"}`);
+      lines.push(`- Label missing: ${labelMissingVal}`); // empty stays empty
+
+      lines.push(`System Normal: ${doneText(sysDone)}`);
+      if(sysDetails.length) lines.push(`- Issues: ${sysDetails.join(", ")}`);
+
+      lines.push(`Cleaning Check: ${doneText(cleanDone)}`);
+      if(cleanDetails.length) lines.push(`- Issues: ${cleanDetails.join(", ")}`);
+
+      lines.push(`Bin, Shelf & Freezer Ready: ${doneText(bsfDone)}`);
+      if(bsfDetails.length) lines.push(`- Issues: ${bsfDetails.join(", ")}`);
+
+      lines.push(`Supplies Check: ${doneText(supDone)}`);
+      if(supDetails.length) lines.push(`- Issues: ${supDetails.join(", ")}`);
+
+      lines.push(`Trash Out: ${doneText(trashDone)}`);
+      lines.push(``);
+
+      // Cash
+      lines.push(`Cash`);
+      lines.push(`Drawer Cash: ${drawer}`);
+      lines.push(`System Cash Sales: ${systemSales}`);
+      lines.push(`Difference (Drawer - System): ${diffVal}`);
+
+      return lines.join("\n");
+    }
+
+    function openWhatsApp(){
+      const msg = buildMessage();
+      const url = `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(msg)}`;
+      window.open(url, "_blank");
+    }
+
+    // Back button (scroll to top)
+    document.getElementById("btnBack").addEventListener("click", () => {
+      window.scrollTo({top: 0, behavior: "smooth"});
+    });
+
+    document.getElementById("btnSend").addEventListener("click", openWhatsApp);
+
+    // ---------------------------
+    // Service worker (optional)
+    // ---------------------------
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>
