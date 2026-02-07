@@ -958,10 +958,12 @@
         {sku:"SKU 3", reco: document.getElementById("fp3_reco").value ?? "0", closed: segState.fp3_closed},
       ];
 
-      const delivery = [1,2,3,4,5].map(i => ({
-        sku: (document.getElementById(`del_sku_${i}`).value || "").trim(),
-        exp: (document.getElementById(`del_exp_${i}`).value || "").trim()
-      }));
+      const expHasIssue = document.getElementById("exp_hasIssue")?.checked;
+
+const delivery = [1,2,3,4,5].map(i => ({
+  sku: `SKU ${i}`,
+  exp: (document.getElementById(`exp_sku${i}`)?.value || "").trim()
+}));
 
       const envDetails = listCheckedDetails("env");
       const sysDetails = listCheckedDetails("sys");
