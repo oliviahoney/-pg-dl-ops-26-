@@ -30,6 +30,51 @@
       --field:#0f0f0f;
     }
 
+    .expWrap{ margin-top:14px; }
+.expToggle{ display:flex; align-items:center; gap:10px; }
+.expToggle input{ transform:scale(1.1); }
+
+.expPanel{ display:none; margin-top:10px; }
+.expPanel.show{ display:block; }
+
+.expGrid{
+  display:grid;
+  grid-template-columns: 110px 1fr; /* 左SKU标签，右输入 */
+  gap:12px 12px;
+  align-items:center;
+}
+.expRow{
+  display:grid;
+  grid-template-columns: 110px 1fr; /* 每行两列 */
+  gap:12px;
+  align-items:center;
+}
+.expLabel{
+  color:#cfcfcf;
+  font-weight:700;
+  letter-spacing:.2px;
+}
+.expInput{
+  width:100%;
+}
+@media (max-width:420px){
+  .expRow{ grid-template-columns: 90px 1fr; }
+  .expLabel{ font-size:14px; }
+}
+
+    
+.skuGrid{
+  display:grid;
+  grid-template-columns: 1fr 220px; /* 左大右小 */
+  gap:12px;
+  align-items:end;
+}
+@media (max-width:420px){
+  .skuGrid{ grid-template-columns: 1fr 170px; }
+}
+.closedBox .btns{ display:flex; gap:10px; justify-content:flex-start; }
+.closedBox label{ margin-top:0; }
+
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -43,7 +88,7 @@
       position:sticky;
       top:0;
       z-index:10;
-      padding:18px 16px 14px;
+      padding: calc(18px + env(safe-area-inset-top)) 16px 14px;
       background:rgba(10,10,10,.82);
       backdrop-filter: blur(10px);
       border-bottom:1px solid rgba(255,255,255,.06);
@@ -500,65 +545,58 @@
     </section>
 
     <!-- Delivery expiry check -->
-    <section class="card">
-      <h2>Today's delivery expiry check (if &lt; 8 months)</h2>
-      <div class="hint">Food / Topper / Treats / Supplements — list SKUs and EXP below:</div>
+    <div class="card expWrap">
+  <div class="h2">Today's delivery expiry check</div>
+  <div class="sub">Only if you found items with EXP ≤ 8 months.</div>
 
-      <div class="deliveryRow">
-        <div class="deliveryLabel">SKU 1</div>
-        <div>
-          <input id="del_sku_1" type="text" placeholder="" />
-        </div>
-        <div class="expLabel">EXP</div>
-        <div>
-          <input id="del_exp_1" type="text" placeholder="" />
-        </div>
-      </div>
+  <label class="expToggle">
+    <input type="checkbox" id="exp_hasIssue">
+    <span>Found items with EXP ≤ 8 months</span>
+  </label>
 
-      <div class="deliveryRow">
-        <div class="deliveryLabel">SKU 2</div>
-        <div>
-          <input id="del_sku_2" type="text" placeholder="" />
-        </div>
-        <div class="expLabel">EXP</div>
-        <div>
-          <input id="del_exp_2" type="text" placeholder="" />
-        </div>
-      </div>
+  <div id="exp_panel" class="expPanel">
+    <div class="expRow" style="margin-top:10px;">
+      <div class="expLabel">SKU</div>
+      <div class="expLabel">EXP</div>
+    </div>
 
-      <div class="deliveryRow">
-        <div class="deliveryLabel">SKU 3</div>
-        <div>
-          <input id="del_sku_3" type="text" placeholder="" />
-        </div>
-        <div class="expLabel">EXP</div>
-        <div>
-          <input id="del_exp_3" type="text" placeholder="" />
-        </div>
-      </div>
+    <!-- 5 rows, each row = 2 columns -->
+    <div class="expRow">
+      <div class="expLabel">SKU 1</div>
+      <input class="expInput" id="exp_sku1" placeholder="" autocomplete="off">
+      <div class="expLabel" style="display:none;"></div>
+    </div>
 
-      <div class="deliveryRow">
-        <div class="deliveryLabel">SKU 4</div>
-        <div>
-          <input id="del_sku_4" type="text" placeholder="" />
-        </div>
-        <div class="expLabel">EXP</div>
-        <div>
-          <input id="del_exp_4" type="text" placeholder="" />
-        </div>
-      </div>
+    <div class="expRow">
+      <div class="expLabel">SKU 2</div>
+      <input class="expInput" id="exp_sku2" placeholder="" autocomplete="off">
+      <div class="expLabel" style="display:none;"></div>
+    </div>
 
-      <div class="deliveryRow">
-        <div class="deliveryLabel">SKU 5</div>
-        <div>
-          <input id="del_sku_5" type="text" placeholder="" />
-        </div>
-        <div class="expLabel">EXP</div>
-        <div>
-          <input id="del_exp_5" type="text" placeholder="" />
-        </div>
-      </div>
-    </section>
+    <div class="expRow">
+      <div class="expLabel">SKU 3</div>
+      <input class="expInput" id="exp_sku3" placeholder="" autocomplete="off">
+      <div class="expLabel" style="display:none;"></div>
+    </div>
+
+    <div class="expRow">
+      <div class="expLabel">SKU 4</div>
+      <input class="expInput" id="exp_sku4" placeholder="" autocomplete="off">
+      <div class="expLabel" style="display:none;"></div>
+    </div>
+
+    <div class="expRow">
+      <div class="expLabel">SKU 5</div>
+      <input class="expInput" id="exp_sku5" placeholder="" autocomplete="off">
+      <div class="expLabel" style="display:none;"></div>
+    </div>
+
+    <div class="hint" style="margin-top:8px; opacity:.8;">
+      Format example: 2026-10-15 or Oct 15, 2026
+    </div>
+  </div>
+</div>
+
 
     <!-- Checklist -->
     <section class="card">
@@ -729,6 +767,7 @@
   </main>
 
   <script>
+    
     // ---------------------------
     // Helpers
     // ---------------------------
