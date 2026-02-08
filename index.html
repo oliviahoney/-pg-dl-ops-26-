@@ -480,7 +480,19 @@
       border: 1px solid rgba(255,255,255,.08);
       background: rgba(0,0,0,.18);
     }
-    
+    /* Mid checklist container: 2 columns */
+#pageMid section.card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* Mobile still keeps 2 columns */
+@media (max-width: 560px) {
+  #pageMid section.card {
+    grid-template-columns: 1fr 1fr;
+  }
+}
     .mid-checklist-item input[type="checkbox"] {
       width: 20px;
       height: 20px;
