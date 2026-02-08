@@ -576,12 +576,12 @@
             </div>
 
             <div class="closedBox">
-              <label>Closed</label>
-              <div class="btns segBtns" data-seg="fp1_closed">
-                <div class="segBtn active" data-val="No">No</div>
-                <div class="segBtn" data-val="Yes">Yes</div>
-              </div>
-            </div>
+  <label>Closed</label>
+  <select class="closedSelect" data-seg="fp1_closed">
+    <option value="No" selected>No</option>
+    <option value="Yes">Yes</option>
+  </select>
+</div>
           </div>
         </div>
 
@@ -594,12 +594,12 @@
             </div>
 
             <div class="closedBox">
-              <label>Closed</label>
-              <div class="btns segBtns" data-seg="fp2_closed">
-                <div class="segBtn active" data-val="No">No</div>
-                <div class="segBtn" data-val="Yes">Yes</div>
-              </div>
-            </div>
+  <label>Closed</label>
+  <select class="closedSelect" data-seg="fp2_closed">
+    <option value="No" selected>No</option>
+    <option value="Yes">Yes</option>
+  </select>
+</div>
           </div>
         </div>
 
@@ -612,12 +612,12 @@
             </div>
 
             <div class="closedBox">
-              <label>Closed</label>
-              <div class="btns segBtns" data-seg="fp3_closed">
-                <div class="segBtn active" data-val="No">No</div>
-                <div class="segBtn" data-val="Yes">Yes</div>
-              </div>
-            </div>
+  <label>Closed</label>
+  <select class="closedSelect" data-seg="fp3_closed">
+    <option value="No" selected>No</option>
+    <option value="Yes">Yes</option>
+  </select>
+</div>
           </div>
         </div>
       </section>
@@ -862,12 +862,12 @@
             </div>
 
             <div class="closedBox">
-              <label>Closed</label>
-              <div class="btns segBtns" data-seg="fp1_closed_closing">
-                <div class="segBtn active" data-val="No">No</div>
-                <div class="segBtn" data-val="Yes">Yes</div>
-              </div>
-            </div>
+  <label>Closed</label>
+  <select class="closedSelect" data-seg="fp1_closed">
+    <option value="No" selected>No</option>
+    <option value="Yes">Yes</option>
+  </select>
+</div>
           </div>
         </div>
 
@@ -880,12 +880,12 @@
             </div>
 
             <div class="closedBox">
-              <label>Closed</label>
-              <div class="btns segBtns" data-seg="fp2_closed_closing">
-                <div class="segBtn active" data-val="No">No</div>
-                <div class="segBtn" data-val="Yes">Yes</div>
-              </div>
-            </div>
+  <label>Closed</label>
+  <select class="closedSelect" data-seg="fp2_closed">
+    <option value="No" selected>No</option>
+    <option value="Yes">Yes</option>
+  </select>
+</div>
           </div>
         </div>
 
@@ -898,12 +898,12 @@
             </div>
 
             <div class="closedBox">
-              <label>Closed</label>
-              <div class="btns segBtns" data-seg="fp3_closed_closing">
-                <div class="segBtn active" data-val="No">No</div>
-                <div class="segBtn" data-val="Yes">Yes</div>
-              </div>
-            </div>
+  <label>Closed</label>
+  <select class="closedSelect" data-seg="fp3_closed">
+    <option value="No" selected>No</option>
+    <option value="Yes">Yes</option>
+  </select>
+</div>
           </div>
         </div>
       </section>
@@ -1189,35 +1189,29 @@
       });
 
       // ---------------------------
-      // Focus SKU segmented (Yes/No) for opening
-      // ---------------------------
-      const segGroupsOpening = Array.from(document.querySelectorAll("#pageOpening .segBtns[data-seg]"));
-      const segStateOpening = {
-        fp1_closed: "No",
-        fp2_closed: "No",
-        fp3_closed: "No"
-      };
+// Focus SKU closed dropdown for opening
+// ---------------------------
+const closedSelectsOpening = Array.from(document.querySelectorAll("#pageOpening .closedSelect[data-seg]"));
+const segStateOpening = {
+  fp1_closed: "No",
+  fp2_closed: "No",
+  fp3_closed: "No"
+};
 
-      function setSegOpening(groupKey, val){
-        segStateOpening[groupKey] = val;
-        const wrap = document.querySelector(`#pageOpening .segBtns[data-seg="${groupKey}"]`);
-        if(!wrap) return;
-        Array.from(wrap.querySelectorAll(".segBtn")).forEach(b => {
-          b.classList.toggle("active", b.dataset.val === val);
-        });
-      }
+function updateSegStateOpening(groupKey, val){
+  segStateOpening[groupKey] = val;
+}
 
-      // Initialize all to "No" and set up event listeners
-      segGroupsOpening.forEach(wrap => {
-        const key = wrap.dataset.seg;
-        setSegOpening(key, "No");
-        
-        wrap.addEventListener("click", (e) => {
-          const btn = e.target.closest(".segBtn");
-          if(!btn) return;
-          setSegOpening(key, btn.dataset.val);
-        });
-      });
+// Initialize all to "No" and set up event listeners
+closedSelectsOpening.forEach(select => {
+  const key = select.dataset.seg;
+  select.value = "No"; // Set default value to "No"
+  updateSegStateOpening(key, "No");
+  
+  select.addEventListener("change", (e) => {
+    updateSegStateOpening(key, e.target.value);
+  });
+});
 
       // ---------------------------
       // Checklist status text for opening
@@ -1387,15 +1381,10 @@
         checkbox.checked = false;
       });
       
-      // Reset segmented buttons to "No"
-      document.querySelectorAll('#pageOpening .segBtns[data-seg]').forEach(wrap => {
-        const key = wrap.dataset.seg;
-        const noBtn = wrap.querySelector('.segBtn[data-val="No"]');
-        if (noBtn) {
-          wrap.querySelectorAll('.segBtn').forEach(b => b.classList.remove('active'));
-          noBtn.classList.add('active');
-        }
-      });
+      // Reset dropdowns to "No"
+document.querySelectorAll('#pageClosing .closedSelect[data-seg]').forEach(select => {
+  select.value = "No";
+});
       
       // Reset status
       document.querySelectorAll('#pageOpening .status').forEach(status => {
@@ -1487,35 +1476,29 @@
       });
 
       // ---------------------------
-      // Focus SKU segmented (Yes/No) for closing
-      // ---------------------------
-      const segGroupsClosing = Array.from(document.querySelectorAll("#pageClosing .segBtns[data-seg]"));
-      const segStateClosing = {
-        fp1_closed_closing: "No",
-        fp2_closed_closing: "No",
-        fp3_closed_closing: "No"
-      };
+// Focus SKU closed dropdown for closing
+// ---------------------------
+const closedSelectsClosing = Array.from(document.querySelectorAll("#pageClosing .closedSelect[data-seg]"));
+const segStateClosing = {
+  fp1_closed_closing: "No",
+  fp2_closed_closing: "No",
+  fp3_closed_closing: "No"
+};
 
-      function setSegClosing(groupKey, val){
-        segStateClosing[groupKey] = val;
-        const wrap = document.querySelector(`#pageClosing .segBtns[data-seg="${groupKey}"]`);
-        if(!wrap) return;
-        Array.from(wrap.querySelectorAll(".segBtn")).forEach(b => {
-          b.classList.toggle("active", b.dataset.val === val);
-        });
-      }
+function updateSegStateClosing(groupKey, val){
+  segStateClosing[groupKey] = val;
+}
 
-      // Initialize all to "No"
-      segGroupsClosing.forEach(wrap => {
-        const key = wrap.dataset.seg;
-        setSegClosing(key, "No");
-        
-        wrap.addEventListener("click", (e) => {
-          const btn = e.target.closest(".segBtn");
-          if(!btn) return;
-          setSegClosing(key, btn.dataset.val);
-        });
-      });
+// Initialize all to "No"
+closedSelectsClosing.forEach(select => {
+  const key = select.dataset.seg;
+  select.value = "No"; // Set default value to "No"
+  updateSegStateClosing(key, "No");
+  
+  select.addEventListener("change", (e) => {
+    updateSegStateClosing(key, e.target.value);
+  });
+});
 
       // ---------------------------
       // Checklist status text for closing
@@ -1599,15 +1582,10 @@
         checkbox.checked = false;
       });
       
-      // Reset segmented buttons to "No"
-      document.querySelectorAll('#pageClosing .segBtns[data-seg]').forEach(wrap => {
-        const key = wrap.dataset.seg;
-        const noBtn = wrap.querySelector('.segBtn[data-val="No"]');
-        if (noBtn) {
-          wrap.querySelectorAll('.segBtn').forEach(b => b.classList.remove('active'));
-          noBtn.classList.add('active');
-        }
-      });
+      // Reset dropdowns to "No"
+document.querySelectorAll('#pageOpening .closedSelect[data-seg]').forEach(select => {
+  select.value = "No";
+});
       
       // Reset status
       document.querySelectorAll('#pageClosing .status').forEach(status => {
@@ -1796,10 +1774,10 @@
 
     // Helper functions for message building
     function getSegState(key, page) {
-      const activeBtn = document.querySelector(`#page${page} .segBtns[data-seg="${key}"] .segBtn.active`);
-      return activeBtn ? activeBtn.dataset.val : "No";
-    }
-
+  // Find the corresponding dropdown menu based on page and key
+  const select = document.querySelector(`#page${page} .closedSelect[data-seg="${key}"]`);
+  return select ? select.value : "No";
+}
     function listCheckedDetails(detailKey, pageId){
       const nodes = Array.from(document.querySelectorAll(`#${pageId} input[type="checkbox"][data-detail="${detailKey}"]`));
       const vals = nodes.filter(n => n.checked).map(n => n.value);
