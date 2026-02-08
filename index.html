@@ -489,17 +489,22 @@
       background: rgba(0,0,0,.18);
     }
     
-#pageMid section.card {
+/* MID checklist ONLY: keep 2 columns */
+#pageMid .midChecklistGrid{
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 
-
-@media (max-width: 560px) {
-  #pageMid section.card {
+@media (max-width: 560px){
+  #pageMid .midChecklistGrid{
     grid-template-columns: 1fr 1fr;
   }
+}
+
+/* remove extra spacing */
+#pageMid .mid-checklist-item{
+  margin-top: 0;
 }
     .mid-checklist-item input[type="checkbox"] {
       width: 20px;
@@ -855,7 +860,7 @@
       </div>
       <section class="card">
         <h2>Checklist</h2>
-        
+        <div class="midChecklistGrid">
         <div class="mid-checklist-item">
           <input type="checkbox" id="mid_bin">
           <div class="mid-checklist-label">Bin Reorganized</div>
@@ -891,6 +896,7 @@
           <div class="mid-checklist-label">Freezers Normal</div>
           <div class="mid-time" id="mid_freezers_working_time"></div>
         </div>
+      </div>
       </section>
 
       <!-- Submit button -->
