@@ -527,6 +527,85 @@
       margin-top: 6px;
       font-style: italic;
     }
+    /* === Unified font size, color, weight and spacing === */
+
+/* All big / main titles (h2, .title in header, section titles, etc) */
+h2,
+header .title,
+.checkTitle,
+.skuTitle,
+.card > h2,
+.mid-checklist-label,
+.checklist-item label,
+.expHeadCell,
+.diffLabel,
+.detailsHead,
+.subline strong {
+  font-size: 16px !important;
+  font-weight: normal !important;          /* no bold */
+  color: #ffffff !important;               /* pure white for big text */
+  line-height: 1.4;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+/* All small / secondary text */
+.subline,
+.status,
+.hint,
+.closing-reminder,
+.dRow span,
+.expHeadCell,
+.detailsHead,
+.diffValue,
+.smallHelp,
+label:not(.inlineLabel):not(.mid-checklist-label),
+.cleaningReminder,
+.noteInput,
+label[for] {
+  font-size: 12px !important;
+  font-weight: normal !important;          /* no bold */
+  color: #a0a0a0 !important;               /* light gray for small text */
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Make sure Log Check-in buttons are one per line */
+.operationWrap .pill {
+  display: block !important;
+  width: 100%;
+  margin-bottom: 12px !important;
+  text-align: center;
+}
+
+/* Consistent spacing between same-type items */
+.checkItem,
+.skuBlock,
+.mid-checklist-item,
+.dRow {
+  margin-bottom: 16px !important;
+}
+
+/* Consistent spacing between cards */
+.card {
+  margin: 20px 0 !important;
+}
+
+/* Fix header title size (only the operation title, not "PG Daily Log") */
+header .title {
+  font-size: 16px !important;
+}
+
+/* Make sure the 3 operation buttons are clearly one per line */
+#page1 .operationWrap {
+  display: block !important;
+}
+
+#page1 .operationWrap .pill {
+  margin: 0 0 14px 0 !important;
+  padding: 16px !important;
+  font-size: 15px !important;
+}
   </style>
 </head>
 
