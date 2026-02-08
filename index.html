@@ -342,11 +342,16 @@ body {
     }
 
     /* All details in 2-column grid */
-    .detailsGrid{
-      display:grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap:10px;
-    }
+   /* Checklist details: force true 2-column layout */
+.detailsGrid{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+}
+/* System Ready checklist items stay half-half */
+#sys_details .dRow{
+  width: 100%;
+}
     @media (max-width: 560px){
       .detailsGrid{grid-template-columns:1fr}
     }
@@ -703,12 +708,12 @@ label,
               <div class="detailsBox">
                 <div class="detailsHead">check below if down</div>
                 <div class="detailsGrid" id="sys_details">
-                  <label class="dRow"><input type="checkbox" data-detail="sys" value="Phone"><span>Phone issue</span></label>
-                  <label class="dRow"><input type="checkbox" data-detail="sys" value="WiFi"><span>WiFi issue</span></label>
-                  <label class="dRow"><input type="checkbox" data-detail="sys" value="POS"><span>POS issue</span></label>
-                  <label class="dRow"><input type="checkbox" data-detail="sys" value="Printer"><span>Printer issue</span></label>
-                  <label class="dRow"><input type="checkbox" data-detail="sys" value="Receipt printer"><span>Receipt printer issue</span></label>
-                  <label class="dRow"><input type="checkbox" data-detail="sys" value="Barcode scanner"><span>Barcode scanner issue</span></label>
+                  <label class="dRow"><input type="checkbox" data-detail="sys" value="Phone"><span>Phone</span></label>
+                  <label class="dRow"><input type="checkbox" data-detail="sys" value="WiFi"><span>WiFi</span></label>
+                  <label class="dRow"><input type="checkbox" data-detail="sys" value="POS"><span>POS</span></label>
+                  <label class="dRow"><input type="checkbox" data-detail="sys" value="Printer"><span>Printer</span></label>
+                  <label class="dRow"><input type="checkbox" data-detail="sys" value="Receipt printer"><span>Receipt printer</span></label>
+                  <label class="dRow"><input type="checkbox" data-detail="sys" value="Barcode scanner"><span>Barcode scanner</span></label>
                 </div>
               </div>
             </div>
