@@ -28,6 +28,18 @@
       --pad:16px;
       --gap:12px;
       --field:#0f0f0f;
+      /* ===== Unified Typography ===== */
+:root{
+  --pg-title-size: 20px;
+  --pg-title-weight: 800;
+  --pg-title-color: #f2f2f2;
+  --pg-title-line: 1.25;
+
+  --pg-sub-size: 13px;
+  --pg-sub-weight: 500;
+  --pg-sub-color: #a8a8a8;
+  --pg-sub-line: 1.45;
+}
     }
 
     /* Page system */
@@ -125,11 +137,16 @@ body {
       padding:16px;
       margin: 12px 0;
     }
-    .card h2{
-      margin:0 0 10px;
-      font-size:20px;
-      font-weight:800;
-    }
+    /* All large titles */
+.card h2,
+.checkTitle,
+.skuTitle {
+  font-size: var(--pg-title-size);
+  font-weight: var(--pg-title-weight);
+  color: var(--pg-title-color);
+  line-height: var(--pg-title-line);
+  margin: 0 0 6px;
+}
     .subline{
       margin: 0 0 10px;
       color:var(--muted);
@@ -543,7 +560,29 @@ body {
       margin-top: 6px;
       font-style: italic;
     }
+/* All small helper text */
+.subline,
+.status,
+.detailsHead,
+.closing-reminder,
+.cleaningReminder,
+label,
+.mid-time {
+  font-size: var(--pg-sub-size);
+  font-weight: var(--pg-sub-weight);
+  color: var(--pg-sub-color);
+  line-height: var(--pg-sub-line);
+}
+/* Unified vertical spacing */
+.card > * + * {
+  margin-top: 10px;
+}
 
+.checkItem,
+.skuBlock,
+.expWrap {
+  margin-top: 12px;
+}
   </style>
 </head>
 
