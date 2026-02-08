@@ -84,7 +84,15 @@
     .closedBox label{ margin-top:0; }
 
     *{box-sizing:border-box}
-    html,body{height:100%}
+    html, body {
+  height: 100%;
+  background: #0f0f0f;
+}
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  padding-bottom: env(safe-area-inset-bottom);
+}
     body{
       margin:0;
       background:linear-gradient(180deg,#0b0b0b 0%, #0f0f0f 40%, #0b0b0b 100%);
