@@ -563,108 +563,7 @@
     </header>
 
     <main>
-      <!-- Focus SKUs -->
-      <section class="card" id="focusSKUs">
-        <h2>Focus SKUs</h2>
-
-        <div class="skuBlock">
-          <div class="skuTitle">SKU 1</div>
-          <div class="skuGrid">
-            <div>
-              <label for="fp1_reco">Recommend Times</label>
-              <input id="fp1_reco" type="number" inputmode="numeric" min="0" value="0" />
-            </div>
-
-            <div class="closedBox">
-  <label>Closed</label>
-  <select class="closedSelect" data-seg="fp1_closed">
-    <option value="No" selected>No</option>
-    <option value="Yes">Yes</option>
-  </select>
-</div>
-          </div>
-        </div>
-
-        <div class="skuBlock">
-          <div class="skuTitle">SKU 2</div>
-          <div class="skuGrid">
-            <div>
-              <label for="fp2_reco">Recommend Times</label>
-              <input id="fp2_reco" type="number" inputmode="numeric" min="0" value="0" />
-            </div>
-
-            <div class="closedBox">
-  <label>Closed</label>
-  <select class="closedSelect" data-seg="fp2_closed">
-    <option value="No" selected>No</option>
-    <option value="Yes">Yes</option>
-  </select>
-</div>
-          </div>
-        </div>
-
-        <div class="skuBlock">
-          <div class="skuTitle">SKU 3</div>
-          <div class="skuGrid">
-            <div>
-              <label for="fp3_reco">Recommend Times</label>
-              <input id="fp3_reco" type="number" inputmode="numeric" min="0" value="0" />
-            </div>
-
-            <div class="closedBox">
-  <label>Closed</label>
-  <select class="closedSelect" data-seg="fp3_closed">
-    <option value="No" selected>No</option>
-    <option value="Yes">Yes</option>
-  </select>
-</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Delivery expiry check -->
-      <div class="card expWrap">
-        <h2>Today's Receiving Status</h2>
-        <div class="subline">Expiry Check Scope: Food, Topper, Treats, Supplement</div>
-
-        <label class="expToggle">
-          <input type="checkbox" id="exp_hasIssue">
-          <span>Found items with EXP ≤ 8 months</span>
-        </label>
-
-        <div id="exp_panel" class="expPanel">
-          <div class="expRow expHead" style="margin-top:10px;">
-            <div class="expHeadCell">SKU</div>
-            <div class="expHeadCell">EXP mm/dd/yyyy</div>
-          </div>
-
-          <div class="expRow">
-            <input class="expInput" id="exp_sku1" placeholder="" autocomplete="off">
-            <input class="expInput date-format" id="exp_exp1" placeholder="" autocomplete="off">
-          </div>
-
-          <div class="expRow">
-            <input class="expInput" id="exp_sku2" placeholder="" autocomplete="off">
-            <input class="expInput date-format" id="exp_exp2" placeholder="" autocomplete="off">
-          </div>
-
-          <div class="expRow">
-            <input class="expInput" id="exp_sku3" placeholder="" autocomplete="off">
-            <input class="expInput date-format" id="exp_exp3" placeholder="" autocomplete="off">
-          </div>
-
-          <div class="expRow">
-            <input class="expInput" id="exp_sku4" placeholder="" autocomplete="off">
-            <input class="expInput date-format" id="exp_exp4" placeholder="" autocomplete="off">
-          </div>
-
-          <div class="expRow">
-            <input class="expInput" id="exp_sku5" placeholder="" autocomplete="off">
-            <input class="expInput date-format" id="exp_exp5" placeholder="" autocomplete="off">
-          </div>
-        </div>
-      </div>
-
+     
       <!-- Checklist -->
       <section class="card">
         <h2>Checklist</h2>
@@ -771,6 +670,48 @@
             </div>
           </div>
         </div>
+        <!-- Delivery expiry check -->
+      <div class="card expWrap">
+        <h2>Today's Receiving Status</h2>
+        <div class="subline">Expiry Check Scope: Food, Topper, Treats, Supplement</div>
+
+        <label class="expToggle">
+          <input type="checkbox" id="exp_hasIssue">
+          <span>Found items with EXP ≤ 8 months</span>
+        </label>
+
+        <div id="exp_panel" class="expPanel">
+          <div class="expRow expHead" style="margin-top:10px;">
+            <div class="expHeadCell">SKU</div>
+            <div class="expHeadCell">EXP mm/dd/yyyy</div>
+          </div>
+
+          <div class="expRow">
+            <input class="expInput" id="exp_sku1" placeholder="" autocomplete="off">
+            <input class="expInput date-format" id="exp_exp1" placeholder="" autocomplete="off">
+          </div>
+
+          <div class="expRow">
+            <input class="expInput" id="exp_sku2" placeholder="" autocomplete="off">
+            <input class="expInput date-format" id="exp_exp2" placeholder="" autocomplete="off">
+          </div>
+
+          <div class="expRow">
+            <input class="expInput" id="exp_sku3" placeholder="" autocomplete="off">
+            <input class="expInput date-format" id="exp_exp3" placeholder="" autocomplete="off">
+          </div>
+
+          <div class="expRow">
+            <input class="expInput" id="exp_sku4" placeholder="" autocomplete="off">
+            <input class="expInput date-format" id="exp_exp4" placeholder="" autocomplete="off">
+          </div>
+
+          <div class="expRow">
+            <input class="expInput" id="exp_sku5" placeholder="" autocomplete="off">
+            <input class="expInput date-format" id="exp_exp5" placeholder="" autocomplete="off">
+          </div>
+        </div>
+      </div>
       </section>
 
       <!-- Submit button -->
@@ -791,6 +732,65 @@
     </header>
 
     <main>
+       <!-- Focus SKUs -->
+      <section class="card" id="focusSKUs">
+        <h2>Focus SKUs</h2>
+
+        <div class="skuBlock">
+          <div class="skuTitle">SKU 1</div>
+          <div class="skuGrid">
+            <div>
+              <label for="fp1_reco">Recommend Times</label>
+              <input id="fp1_reco" type="number" inputmode="numeric" min="0" value="0" />
+            </div>
+
+            <div class="closedBox">
+  <label>Closed</label>
+  <select class="closedSelect" data-seg="fp1_closed">
+    <option value="No" selected>No</option>
+    <option value="Yes">Yes</option>
+  </select>
+</div>
+          </div>
+        </div>
+
+        <div class="skuBlock">
+          <div class="skuTitle">SKU 2</div>
+          <div class="skuGrid">
+            <div>
+              <label for="fp2_reco">Recommend Times</label>
+              <input id="fp2_reco" type="number" inputmode="numeric" min="0" value="0" />
+            </div>
+
+            <div class="closedBox">
+  <label>Closed</label>
+  <select class="closedSelect" data-seg="fp2_closed">
+    <option value="No" selected>No</option>
+    <option value="Yes">Yes</option>
+  </select>
+</div>
+          </div>
+        </div>
+
+        <div class="skuBlock">
+          <div class="skuTitle">SKU 3</div>
+          <div class="skuGrid">
+            <div>
+              <label for="fp3_reco">Recommend Times</label>
+              <input id="fp3_reco" type="number" inputmode="numeric" min="0" value="0" />
+            </div>
+
+            <div class="closedBox">
+  <label>Closed</label>
+  <select class="closedSelect" data-seg="fp3_closed">
+    <option value="No" selected>No</option>
+    <option value="Yes">Yes</option>
+  </select>
+</div>
+          </div>
+        </div>
+      </section>
+
        <div class="card expWrap">
         <h2>Today's Receiving Status</h2>
         <div class="subline">Expiry Check Scope: Food, Topper, Treats, Supplement</div>
