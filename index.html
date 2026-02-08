@@ -325,7 +325,15 @@
     @media (max-width: 560px){
       .detailsGrid{grid-template-columns:1fr}
     }
+#pageOpening #env_details {
+  grid-template-columns: 1fr 1fr;
+}
 
+@media (max-width: 560px) {
+  #pageOpening #env_details {
+    grid-template-columns: 1fr 1fr;
+  }
+}
     .dRow{
       display:flex;
       align-items:center;
@@ -480,14 +488,14 @@
       border: 1px solid rgba(255,255,255,.08);
       background: rgba(0,0,0,.18);
     }
-    /* Mid checklist container: 2 columns */
+    
 #pageMid section.card {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 
-/* Mobile still keeps 2 columns */
+
 @media (max-width: 560px) {
   #pageMid section.card {
     grid-template-columns: 1fr 1fr;
